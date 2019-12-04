@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, View, Text, StyleSheet, Image, Platform } from 'react-native'
+import { ActivityIndicator, View, Text, StyleSheet, Image } from 'react-native'
 import BackgroundImage from './map.jpg'
 import Marker from './marker.png'
-import GoogleMapReact from 'google-map-react'
+import { getMap } from './map'
+import { markerWidth, markerHeight } from './config'
 
-const markerWidth = 30
-const markerHeight = 30
 const stylesStatus = StyleSheet.create({
   wrapper: {
     backgroundColor: '#d30',
@@ -26,6 +25,10 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 233
   },
+  container: {
+    width: '100%',
+    height: '100%'
+  },
   image: {
     width: '100%',
     height: '100%',
@@ -38,13 +41,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'white',
     borderRadius: 5,
-    marginLeft: -75,
-    marginTop: -markerHeight,
     paddingLeft: 10,
     paddingRight: 10,
-    transform: [
-      { translateY: '-100%' },
-    ],
   },
   markerTitle: {
     fontSize: 20,
@@ -56,9 +54,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   markerImage: {
-    position: 'absolute',
-    top: -markerHeight,
-    left: -markerWidth / 2,
     width: markerWidth,
     height: markerHeight
   }
@@ -103,7 +98,6 @@ export default class Map extends Component {
         mapConfigLoaded: true
       })
     }
-    console.log(this.props)
     this.setState({
       apiKey,
       center: {lat, lng},
@@ -185,36 +179,16 @@ export default class Map extends Component {
 
     return (
       <View style={styles.wrapper}>
-        <GoogleMapReact
-          bootstrapURLKeys={{ key: apiKey }}
-          defaultCenter={this.state.center}
-          defaultZoom={this.state.zoom}
-          options={options}
-        >
-          <Image
-            resizeMode="contain"
-            source={{uri: "https://s3.amazonaws.com/proton-uploads-production/499cb11629f511ada5c83ac84b4f026ee345a9bd3b17bdf6a7b06f3198052c3b.png"}}
-            lat={this.state.center.lat}
-            lng={this.state.center.lng}
-            style={styles.markerImage}
-          />
-          <View
-            lat={this.state.center.lat}
-            lng={this.state.center.lng}
-            style={styles.markerView}
-          >
-            <Text
-              style={styles.markerTitle}
-            >
-              {markerTitle}
-            </Text>
-            <Text
-              style={styles.markerSubtitle}
-            >
-              {markerSubtitle}
-            </Text>
-          </View>
-        </GoogleMapReact>
+        {
+          getMap(apiKey,
+            this.state.center,
+            this.state.zoom,
+            options,
+            styles,
+            markerTitle,
+            markerSubtitle
+          )
+        }
       </View>
     )
   }
