@@ -1,16 +1,20 @@
 import MapView, { Marker,  PROVIDER_GOOGLE } from 'react-native-maps';
 import { View, Text, Image } from 'react-native'
 
-export const getMap = (apiKey, center, zoom, options, styles, markerTitle, markerSubtitle) => {
+export const getMap = (apiKey, zoom, options, styles, markerType, center, markerTitle, markerSubtitle, markerCollection) => {
     const mapType = options.mapTypeId === 'roadmap' ? 'standard' : options.mapTypeId
-    console.log(options)
+    const isSimple = markerType === 'simple'
+    const viewCenter = isSimple? center : {
+        lat: 41.850033,
+        lng: -87.6500523
+    }
     return (
         <MapView
             style={styles.container}
             provider={PROVIDER_GOOGLE}
             region={{
-              latitude: center.lat,
-              longitude: center.lng,
+              latitude: viewCenter.lat,
+              longitude: viewCenter.lng,
               latitudeDelta: 0.0922,
               longitudeDelta: 0.0421,
             }}

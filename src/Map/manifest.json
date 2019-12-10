@@ -8,25 +8,77 @@
       "name": "apiKey",
       "displayName": "Google Maps API Key",
       "type": "text"
+    },
+    {
+      "name": "markerType",
+      "displayName": "Marker Type",
+      "type": "text",
+      "default": "simple",
+      "control": {
+        "type": "menu",
+        "options": [
+          { "label": "Simple Marker", "value": "simple" },
+          { "label": "Multiple Markers", "value": "multiple" }
+        ]
+      }
+    },
+    {
+      "name": "markerCollection",
+      "displayName": "Marker Collection",
+      "type": "list",
+      "enabled": { "markerType": "multiple"}
     }
   ],
   "childComponents": [
     {
       "name": "markers",
       "displayName": "Markers",
+      "enabled": { "markerType": "simple"},
       "props": [
         {
-          "name": "markerType",
-          "displayName": "Display markers for...",
-          "type": "text",
-          "default": "all",
-          "control": {
-            "type": "menu",
-            "options": [
-              { "label": "All restaurants", "value": "all" }
-            ]
-          }
+          "name": "markerAddress",
+          "displayName": "Marker Address",
+          "type": "text"
         },
+        {
+          "name": "lat",
+          "displayName": "Latitude",
+          "type": "number"
+        },
+        {
+          "name": "lng",
+          "displayName": "Longitude",
+          "type": "number"
+        },
+        {
+          "name": "markerTitle",
+          "displayName": "Marker Title",
+          "type": "text"
+        },
+        {
+          "name": "markerSubtitle",
+          "displayName": "Marker Subtitle",
+          "type": "text"
+        },
+        {
+          "name": "markerImage",
+          "displayName": "Marker Image",
+          "type": "image"
+        },
+        {
+          "name": "onPress",
+          "displayName": "Click Actions",
+          "type": "action"
+        }
+      ]
+    },
+    {
+      "name": "markers_list",
+      "displayName": "Markers",
+      "role": "listItem",
+      "reference": "markerCollection",
+      "enabled": { "markerType": "multiple"},
+      "props": [
         {
           "name": "markerAddress",
           "displayName": "Marker Address",

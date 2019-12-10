@@ -72,7 +72,8 @@ export default class Map extends Component {
     mapStyle: null,
     customStyle: null,
     errorMessage: null,
-    zoom: 11,
+    zoom: 1,
+    markerType: null,
     mapConfigLoaded: false
   }
   isBrowser = true
@@ -85,7 +86,7 @@ export default class Map extends Component {
   }
 
   fetchMapConfiguration() {
-    const { apiKey, markers: {lat, lng, markerTitle, markerImage, markerSubtitle}, style: { mapStyle, customStyle } } = this.props
+    const { apiKey, markerType, markers: {lat, lng, markerTitle, markerImage, markerSubtitle}, style: { mapStyle, customStyle } } = this.props
     if (!apiKey) {
       return this.setState({
         errorMessage: "API Key is not set.",
@@ -100,6 +101,7 @@ export default class Map extends Component {
     }
     this.setState({
       apiKey,
+      markerType,
       center: {lat, lng},
       markerTitle,
       markerSubtitle,
@@ -146,8 +148,8 @@ export default class Map extends Component {
   }
 
   render() {
-    let { editor } = this.props
-    let { apiKey, markerTitle, markerSubtitle, mapStyle, customStyle, errorMessage, mapConfigLoaded } = this.state
+    let { editor, markerCollection } = this.props
+    let { apiKey, markerType, markerTitle, markerSubtitle, mapStyle, customStyle, errorMessage, mapConfigLoaded } = this.state
 
     if (editor) {
       return (
@@ -181,12 +183,14 @@ export default class Map extends Component {
       <View style={styles.wrapper}>
         {
           getMap(apiKey,
-            this.state.center,
             this.state.zoom,
             options,
             styles,
+            markerType,
+            this.state.center,
             markerTitle,
-            markerSubtitle
+            markerSubtitle,
+            markerCollection
           )
         }
       </View>

@@ -17,37 +17,73 @@ const additionalStyles = StyleSheet.create({
     }
 })
 
-export const getMap = (apiKey, center, zoom, options, styles, markerTitle, markerSubtitle) => {
+export const getMap = (apiKey, zoom, options, styles, markerType, center, markerTitle, markerSubtitle, markerCollection) => {
+    const isSimple = markerType === 'simple'
+    const viewCenter = isSimple? center : {
+        lat: 41.850033,
+        lng: -87.6500523
+    }
     return (
         <GoogleMapReact
             bootstrapURLKeys={{ key: apiKey }}
-            defaultCenter={center}
+            defaultCenter={viewCenter}
             defaultZoom={zoom}
             options={options}
         >
-            <Image
-              resizeMode="contain"
-              source={{uri: "https://s3.amazonaws.com/proton-uploads-production/499cb11629f511ada5c83ac84b4f026ee345a9bd3b17bdf6a7b06f3198052c3b.png"}}
-              lat={center.lat}
-              lng={center.lng}
-              style={[styles.markerImage, additionalStyles.markerImage]}
-            />
-            <View
-              lat={center.lat}
-              lng={center.lng}
-              style={[styles.markerView, additionalStyles.markerView]}
-            >
-                <Text
-                    style={styles.markerTitle}
+            {
+                isSimple ?
+                <View
+                    lat={center.lat}
+                    lng={center.lng}
                 >
-                    {markerTitle}
-                </Text>
-                <Text
-                    style={styles.markerSubtitle}
-                >
-                    {markerSubtitle}
-                </Text>
-            </View>
+                    <Image
+                        resizeMode="contain"
+                        source={{uri: "https://s3.amazonaws.com/proton-uploads-production/499cb11629f511ada5c83ac84b4f026ee345a9bd3b17bdf6a7b06f3198052c3b.png"}}
+                        style={[styles.markerImage, additionalStyles.markerImage]}
+                    />
+                    <View
+                        style={[styles.markerView, additionalStyles.markerView]}
+                    >
+                        <Text
+                            style={styles.markerTitle}
+                        >
+                            {markerTitle}
+                        </Text>
+                        <Text
+                            style={styles.markerSubtitle}
+                        >
+                            {markerSubtitle}
+                        </Text>
+                    </View>
+                </View> :
+                markerCollection && markerCollection.map((marker, index) => (
+                    <View
+                        lat={marker.markers_list.lat}
+                        lng={marker.markers_list.lng}
+                        key={`marker ${index}`}
+                    >
+                        <Image
+                            resizeMode="contain"
+                            source={{uri: "https://s3.amazonaws.com/proton-uploads-production/499cb11629f511ada5c83ac84b4f026ee345a9bd3b17bdf6a7b06f3198052c3b.png"}}
+                            style={[styles.markerImage, additionalStyles.markerImage]}
+                        />
+                        <View
+                            style={[styles.markerView, additionalStyles.markerView]}
+                        >
+                            <Text
+                                style={styles.markerTitle}
+                            >
+                                {marker.markers_list.markerTitle}
+                            </Text>
+                            <Text
+                                style={styles.markerSubtitle}
+                            >
+                                {marker.markers_list.markerSubtitle}
+                            </Text>
+                        </View>
+                    </View>
+                ))
+            }
         </GoogleMapReact>
     )
 }
