@@ -1,5 +1,6 @@
 import MapView, { Marker,  PROVIDER_GOOGLE } from 'react-native-maps';
 import { View, Text, Image } from 'react-native'
+import defaultMarker from './marker.png'
 
 export const getMap = (apiKey, zoom, options, styles, markerType, center, markerTitle, markerSubtitle, markerCollection) => {
     const mapType = options.mapTypeId === 'roadmap' ? 'standard' : options.mapTypeId
@@ -75,7 +76,7 @@ export const getMap = (apiKey, zoom, options, styles, markerType, center, marker
                         </View>
                         <Image
                             resizeMode="contain"
-                            source={{uri: "https://s3.amazonaws.com/proton-uploads-production/499cb11629f511ada5c83ac84b4f026ee345a9bd3b17bdf6a7b06f3198052c3b.png"}}
+                            source={marker.markers_list.markerImage? {uri: marker.markers_list.markerImage.uri} : defaultMarker}
                             style={styles.markerImage}
                         />
                     </Marker>
