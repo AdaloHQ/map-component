@@ -20,35 +20,67 @@ export const getMap = (apiKey, zoom, options, styles, markerType, center, marker
             }}
             mapType={mapType}
             customMapStyle={options.styles? options.styles: []}
-            zoomEnabled={true}
         >
-            <Marker
-                coordinate={{
-                    latitude: center.lat,
-                    longitude: center.lng,
-                }}
-                style={{alignItems: 'center', justifyContent: 'center'}}
-            >
-                <View
-                    style={styles.markerView}
+            {
+                isSimple ?
+                <Marker
+                    coordinate={{
+                        latitude: center.lat,
+                        longitude: center.lng,
+                    }}
+                    style={{alignItems: 'center', justifyContent: 'center'}}
                 >
-                    <Text
-                        style={styles.markerTitle}
+                    <View
+                        style={styles.markerView}
                     >
-                        {markerTitle}
-                    </Text>
-                    <Text
-                        style={styles.markerSubtitle}
+                        <Text
+                            style={styles.markerTitle}
+                        >
+                            {markerTitle}
+                        </Text>
+                        <Text
+                            style={styles.markerSubtitle}
+                        >
+                            {markerSubtitle}
+                        </Text>
+                    </View>
+                    <Image
+                        resizeMode="contain"
+                        source={{uri: "https://s3.amazonaws.com/proton-uploads-production/499cb11629f511ada5c83ac84b4f026ee345a9bd3b17bdf6a7b06f3198052c3b.png"}}
+                        style={styles.markerImage}
+                    />
+                </Marker> :
+                markerCollection && markerCollection.map((marker, index) => (
+                    <Marker
+                        coordinate={{
+                            latitude: marker.markers_list.lat,
+                            longitude: marker.markers_list.lng,
+                        }}
+                        style={{alignItems: 'center', justifyContent: 'center'}}
+                        key={`marker ${index}`}
                     >
-                        {markerSubtitle}
-                    </Text>
-                </View>
-                <Image
-                    resizeMode="contain"
-                    source={{uri: "https://s3.amazonaws.com/proton-uploads-production/499cb11629f511ada5c83ac84b4f026ee345a9bd3b17bdf6a7b06f3198052c3b.png"}}
-                    style={styles.markerImage}
-                />
-            </Marker>
+                        <View
+                            style={styles.markerView}
+                        >
+                            <Text
+                                style={styles.markerTitle}
+                            >
+                                {marker.markers_list.markerTitle}
+                            </Text>
+                            <Text
+                                style={styles.markerSubtitle}
+                            >
+                                {marker.markers_list.markerSubtitle}
+                            </Text>
+                        </View>
+                        <Image
+                            resizeMode="contain"
+                            source={{uri: "https://s3.amazonaws.com/proton-uploads-production/499cb11629f511ada5c83ac84b4f026ee345a9bd3b17bdf6a7b06f3198052c3b.png"}}
+                            style={styles.markerImage}
+                        />
+                    </Marker>
+                ))
+            }
         </MapView>
     )
 }
