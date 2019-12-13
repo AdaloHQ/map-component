@@ -2,7 +2,7 @@ import MapView, { Marker,  PROVIDER_GOOGLE } from 'react-native-maps';
 import { View, Text, Image } from 'react-native'
 import defaultMarker from './marker.png'
 
-export const getMap = (apiKey, zoom, options, styles, markerType, center, markerTitle, markerSubtitle, markerCollection) => {
+export const getMap = (apiKey, zoom, options, styles, markerType, center, markerTitle, markerSubtitle, onPress, markerCollection) => {
     const mapType = options.mapTypeId === 'roadmap' ? 'standard' : options.mapTypeId
     const isSimple = markerType === 'simple'
     const viewCenter = isSimple? center : {
@@ -30,6 +30,7 @@ export const getMap = (apiKey, zoom, options, styles, markerType, center, marker
                         longitude: center.lng,
                     }}
                     style={{alignItems: 'center', justifyContent: 'center'}}
+                    onPress={onPress}
                 >
                     <View
                         style={styles.markerView}
@@ -59,6 +60,7 @@ export const getMap = (apiKey, zoom, options, styles, markerType, center, marker
                         }}
                         style={{alignItems: 'center', justifyContent: 'center'}}
                         key={`marker ${index}`}
+                        onPress={marker.markers_list.onPress}
                     >
                         <View
                             style={styles.markerView}

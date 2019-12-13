@@ -69,6 +69,7 @@ export default class Map extends Component {
     markerTitle: null,
     markerSubtitle: null,
     markerImage: null,
+    onPress: null,
     mapStyle: null,
     customStyle: null,
     errorMessage: null,
@@ -86,7 +87,7 @@ export default class Map extends Component {
   }
 
   fetchMapConfiguration() {
-    const { apiKey, markerType, markers: {lat, lng, markerTitle, markerImage, markerSubtitle}, style: { mapStyle, customStyle } } = this.props
+    const { apiKey, markerType, markers: {lat, lng, markerTitle, markerImage, markerSubtitle, onPress}, style: { mapStyle, customStyle } } = this.props
     if (!apiKey) {
       return this.setState({
         errorMessage: "API Key is not set.",
@@ -105,6 +106,7 @@ export default class Map extends Component {
       center: {lat, lng},
       markerTitle,
       markerSubtitle,
+      onPress,
       mapStyle,
       customStyle,
       errorMessage: null,
@@ -149,7 +151,7 @@ export default class Map extends Component {
 
   render() {
     let { editor, markerCollection } = this.props
-    let { apiKey, markerType, markerTitle, markerSubtitle, mapStyle, customStyle, errorMessage, mapConfigLoaded } = this.state
+    let { apiKey, markerType, markerTitle, markerSubtitle, onPress, mapStyle, customStyle, errorMessage, mapConfigLoaded } = this.state
 
     if (editor) {
       return (
@@ -190,6 +192,7 @@ export default class Map extends Component {
             this.state.center,
             markerTitle,
             markerSubtitle,
+            onPress,
             markerCollection
           )
         }

@@ -18,7 +18,7 @@ const additionalStyles = StyleSheet.create({
     }
 })
 
-export const getMap = (apiKey, zoom, options, styles, markerType, center, markerTitle, markerSubtitle, markerCollection) => {
+export const getMap = (apiKey, zoom, options, styles, markerType, center, markerTitle, markerSubtitle, onPress, markerCollection) => {
     const isSimple = markerType === 'simple'
     const viewCenter = isSimple? center : {
         lat: 41.850033,
@@ -36,6 +36,7 @@ export const getMap = (apiKey, zoom, options, styles, markerType, center, marker
                 <View
                     lat={center.lat}
                     lng={center.lng}
+                    onClick={onPress}
                 >
                     <Image
                         resizeMode="contain"
@@ -62,6 +63,7 @@ export const getMap = (apiKey, zoom, options, styles, markerType, center, marker
                         lat={marker.markers_list.lat}
                         lng={marker.markers_list.lng}
                         key={`marker ${index}`}
+                        onClick={marker.markers_list.onPress}
                     >
                         <Image
                             resizeMode="contain"
