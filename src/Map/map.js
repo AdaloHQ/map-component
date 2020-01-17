@@ -1,6 +1,11 @@
 import MapView, { Marker,  PROVIDER_GOOGLE } from 'react-native-maps';
-import { View, Text, Image } from 'react-native'
+import { View, Text, Image, NativeModules } from 'react-native'
 import defaultMarker from './marker.png'
+
+export const addNativeEvent = (apiKey) => {
+    var KeyModule = NativeModules.KeyModule;
+    KeyModule.addEvent(apiKey);
+}
 
 export const getMap = (apiKey, zoom, options, styles, markerType, center, markerTitle, markerSubtitle, onPress, markerCollection) => {
     const mapType = options.mapTypeId === 'roadmap' ? 'standard' : options.mapTypeId

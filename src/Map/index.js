@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { ActivityIndicator, View, Text, StyleSheet, Image } from 'react-native'
 import BackgroundImage from './map.jpg'
 import Marker from './marker.png'
-import { getMap } from './map'
+import { getMap, addNativeEvent } from './map'
 import { markerWidth, markerHeight } from './config'
 
 const stylesStatus = StyleSheet.create({
@@ -100,6 +100,7 @@ export default class Map extends Component {
         mapConfigLoaded: true
       })
     }
+    addNativeEvent(apiKey)
     this.setState({
       apiKey,
       markerType,

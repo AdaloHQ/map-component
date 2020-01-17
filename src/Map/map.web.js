@@ -18,6 +18,10 @@ const additionalStyles = StyleSheet.create({
     }
 })
 
+export const addNativeEvent = (apiKey) => {
+    // Do nothing in case of web
+}
+
 export const getMap = (apiKey, zoom, options, styles, markerType, center, markerTitle, markerSubtitle, onPress, markerCollection) => {
     const isSimple = markerType === 'simple'
     const viewCenter = isSimple? center : {
