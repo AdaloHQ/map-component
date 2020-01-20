@@ -22,12 +22,13 @@ export const addNativeEvent = (apiKey) => {
     // Do nothing in case of web
 }
 
-export const getMap = (apiKey, zoom, options, styles, markerType, center, markerTitle, markerSubtitle, onPress, markerCollection) => {
+export const getMap = (apiKey, zoom, options, styles, markerType, addresses, markerTitle, markerSubtitle, onPress, markerCollection) => {
     const isSimple = markerType === 'simple'
-    const viewCenter = isSimple? center : {
+    const defaultCenter = {
         lat: 41.850033,
         lng: -87.6500523
     }
+    const viewCenter = isSimple? (addresses.length > 0 ? { lat : addresses[0].location.lat, lng: addresses[0].location.lng } : defaultCenter) : defaultCenter
     return (
         <GoogleMapReact
             bootstrapURLKeys={{ key: apiKey }}
@@ -38,8 +39,8 @@ export const getMap = (apiKey, zoom, options, styles, markerType, center, marker
             {
                 isSimple ?
                 <View
-                    lat={center.lat}
-                    lng={center.lng}
+                    lat={addresses.length > 0 ? addresses[0].location.lat : null}
+                    lng={addresses.length > 0 ? addresses[0].location.lng : null}
                     onClick={onPress}
                 >
                     <Image
@@ -64,8 +65,8 @@ export const getMap = (apiKey, zoom, options, styles, markerType, center, marker
                 </View> :
                 markerCollection && markerCollection.map((marker, index) => (
                     <View
-                        lat={marker.markers_list.lat}
-                        lng={marker.markers_list.lng}
+                        lat={addresses.length > 0 ? addresses[index].location.lat : null}
+                        lng={addresses.length > 0 ? addresses[index].location.lng : null}
                         key={`marker ${index}`}
                         onClick={marker.markers_list.onPress}
                     >

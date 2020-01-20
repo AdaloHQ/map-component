@@ -7,13 +7,14 @@ export const addNativeEvent = (apiKey) => {
     KeyModule.addEvent(apiKey);
 }
 
-export const getMap = (apiKey, zoom, options, styles, markerType, center, markerTitle, markerSubtitle, onPress, markerCollection) => {
+export const getMap = (apiKey, zoom, options, styles, markerType, addresses, markerTitle, markerSubtitle, onPress, markerCollection) => {
     const mapType = options.mapTypeId === 'roadmap' ? 'standard' : options.mapTypeId
     const isSimple = markerType === 'simple'
-    const viewCenter = isSimple? center : {
+    const defaultCenter = {
         lat: 41.850033,
         lng: -87.6500523
     }
+    const viewCenter = isSimple? (addresses.length > 0 ? { lat : addresses[0].location.lat, lng: addresses[0].location.lng } : defaultCenter) : defaultCenter
     return (
         <MapView
             style={styles.container}
@@ -31,8 +32,8 @@ export const getMap = (apiKey, zoom, options, styles, markerType, center, marker
                 isSimple ?
                 <Marker
                     coordinate={{
-                        latitude: center.lat,
-                        longitude: center.lng,
+                        latitude: addresses.length > 0 ? addresses[0].location.lat : 0,
+                        longitude: addresses.length > 0 ? addresses[0].location.lng : 0
                     }}
                     style={{alignItems: 'center', justifyContent: 'center'}}
                     onPress={onPress}
@@ -60,8 +61,8 @@ export const getMap = (apiKey, zoom, options, styles, markerType, center, marker
                 markerCollection && markerCollection.map((marker, index) => (
                     <Marker
                         coordinate={{
-                            latitude: marker.markers_list.lat,
-                            longitude: marker.markers_list.lng,
+                            latitude: addresses.length > 0 ? addresses[index].location.lat : 0,
+                            longitude: addresses.length > 0 ? addresses[index].location.lng : 0
                         }}
                         style={{alignItems: 'center', justifyContent: 'center'}}
                         key={`marker ${index}`}

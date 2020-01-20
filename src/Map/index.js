@@ -3,7 +3,8 @@ import { ActivityIndicator, View, Text, StyleSheet, Image } from 'react-native'
 import BackgroundImage from './map.jpg'
 import Marker from './marker.png'
 import { getMap, addNativeEvent } from './map'
-import { markerWidth, markerHeight } from './config'
+import { markerWidth, markerHeight, geocodeURL } from './config'
+import axios from 'axios'
 
 const stylesStatus = StyleSheet.create({
   wrapper: {
@@ -62,10 +63,8 @@ const styles = StyleSheet.create({
 export default class Map extends Component {
   state = {
     apiKey: null,
-    center: {
-      lat: null,
-      lng: null
-    },
+    markerAddress: null,
+    addresses: [],
     markerTitle: null,
     markerSubtitle: null,
     markerImage: null,
@@ -75,7 +74,7 @@ export default class Map extends Component {
     errorMessage: null,
     zoom: 1,
     markerType: null,
-    mapConfigLoaded: false
+    mapConfigLoaded: false,
   }
   isBrowser = true
 
@@ -87,16 +86,26 @@ export default class Map extends Component {
   }
 
   fetchMapConfiguration() {
-    const { apiKey, markerType, markers: {lat, lng, markerTitle, markerImage, markerSubtitle, onPress}, style: { mapStyle, customStyle } } = this.props
+    const {
+      apiKey,
+      markerType,
+      markers: {
+        markerAddress, markerTitle, markerImage, markerSubtitle, onPress
+      },
+      style: {
+        mapStyle, customStyle
+      }
+    } = this.props
+
     if (!apiKey) {
       return this.setState({
         errorMessage: "API Key is not set.",
         mapConfigLoaded: true
       })
     }
-    if (!lat || !lng) {
+    if (!markerAddress) {
       return this.setState({
-        errorMessage: "Latitude and Longitude are not set.",
+        errorMessage: "Marker address is not set.",
         mapConfigLoaded: true
       })
     }
@@ -104,7 +113,7 @@ export default class Map extends Component {
     this.setState({
       apiKey,
       markerType,
-      center: {lat, lng},
+      markerAddress,
       markerTitle,
       markerSubtitle,
       onPress,
@@ -152,7 +161,19 @@ export default class Map extends Component {
 
   render() {
     let { editor, markerCollection } = this.props
-    let { apiKey, markerType, markerTitle, markerSubtitle, onPress, mapStyle, customStyle, errorMessage, mapConfigLoaded } = this.state
+    let {
+      apiKey,
+      markerType,
+      markerAddress,
+      addresses,
+      markerTitle,
+      markerSubtitle,
+      onPress,
+      mapStyle,
+      customStyle,
+      errorMessage,
+      mapConfigLoaded
+    } = this.state
 
     if (editor) {
       return (
@@ -182,6 +203,21 @@ export default class Map extends Component {
       options.styles = JSON.parse(customStyle)
     }
 
+    const addr = markerType === 'simple' ? [markerAddress] : markerCollection? markerCollection.map(m => m.markers_list.markerAddress) : []
+    if (addresses.length === 0) {
+      axios.post(geocodeURL, {
+          addresses: addr,
+          key: apiKey
+      })
+      .then(res => {
+        this.setState({
+          addresses: res.data
+        })
+      })
+      .catch(err => {
+      })
+    }
+
     return (
       <View style={styles.wrapper}>
         {
@@ -190,7 +226,7 @@ export default class Map extends Component {
             options,
             styles,
             markerType,
-            this.state.center,
+            addresses,
             markerTitle,
             markerSubtitle,
             onPress,

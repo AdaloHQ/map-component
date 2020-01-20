@@ -41,16 +41,6 @@
           "type": "text"
         },
         {
-          "name": "lat",
-          "displayName": "Latitude",
-          "type": "number"
-        },
-        {
-          "name": "lng",
-          "displayName": "Longitude",
-          "type": "number"
-        },
-        {
           "name": "markerTitle",
           "displayName": "Marker Title",
           "type": "text"
@@ -83,16 +73,6 @@
           "name": "markerAddress",
           "displayName": "Marker Address",
           "type": "text"
-        },
-        {
-          "name": "lat",
-          "displayName": "Latitude",
-          "type": "number"
-        },
-        {
-          "name": "lng",
-          "displayName": "Longitude",
-          "type": "number"
         },
         {
           "name": "markerTitle",
