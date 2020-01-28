@@ -1,10 +1,13 @@
 import MapView, { Marker,  PROVIDER_GOOGLE } from 'react-native-maps';
-import { View, Text, Image, NativeModules } from 'react-native'
+import { View, Text, Image, NativeModules, Platform } from 'react-native'
 import defaultMarker from './marker.png'
 
 export const addNativeEvent = (apiKey) => {
-    var KeyModule = NativeModules.KeyModule;
-    KeyModule.addEvent(apiKey);
+    if (Platform.OS === 'ios') {
+        var KeyModule = NativeModules.KeyModule;
+        KeyModule.addEvent(apiKey);
+    } else {
+    }
 }
 
 export const getMap = (apiKey, zoom, options, styles, markerType, addresses, markerTitle, markerSubtitle, onPress, markerCollection) => {
