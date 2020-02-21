@@ -34,26 +34,26 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-  markerView: {
-    display: 'flex',
-    flexDirection: 'column',
-    width: 150,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'white',
-    borderRadius: 5,
-    paddingLeft: 10,
-    paddingRight: 10,
-  },
-  markerTitle: {
-    fontSize: 20,
-    textAlign: 'center',
-    marginBottom: 5,
-  },
-  markerSubtitle: {
-    fontSize: 15,
-    textAlign: 'center',
-  },
+  // markerView: {
+  //   display: 'flex',
+  //   flexDirection: 'column',
+  //   width: 150,
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   backgroundColor: 'white',
+  //   borderRadius: 5,
+  //   paddingLeft: 10,
+  //   paddingRight: 10,
+  // },
+  // markerTitle: {
+  //   fontSize: 20,
+  //   textAlign: 'center',
+  //   marginBottom: 5,
+  // },
+  // markerSubtitle: {
+  //   fontSize: 15,
+  //   textAlign: 'center',
+  // },
   markerImage: {
     width: markerWidth,
     height: markerHeight
@@ -65,14 +65,14 @@ export default class Map extends Component {
     apiKey: null,
     markerAddress: null,
     addresses: [],
-    markerTitle: null,
-    markerSubtitle: null,
+    // markerTitle: null,
+    // markerSubtitle: null,
     markerImage: null,
     onPress: null,
     mapStyle: null,
     customStyle: null,
     errorMessage: null,
-    zoom: 1,
+    zoom: 7,
     markerType: null,
     mapConfigLoaded: false,
   }
@@ -90,7 +90,7 @@ export default class Map extends Component {
       apiKey,
       markerType,
       markers: {
-        markerAddress, markerTitle, markerImage, markerSubtitle, onPress
+        markerAddress, /*markerTitle, markerSubtitle,*/ markerImage, onPress
       },
       style: {
         mapStyle, customStyle
@@ -114,8 +114,8 @@ export default class Map extends Component {
       apiKey,
       markerType,
       markerAddress,
-      markerTitle,
-      markerSubtitle,
+      // markerTitle,
+      // markerSubtitle,
       onPress,
       mapStyle,
       customStyle,
@@ -166,8 +166,8 @@ export default class Map extends Component {
       markerType,
       markerAddress,
       addresses,
-      markerTitle,
-      markerSubtitle,
+      // markerTitle,
+      // markerSubtitle,
       onPress,
       mapStyle,
       customStyle,
@@ -221,14 +221,14 @@ export default class Map extends Component {
     return (
       <View style={styles.wrapper}>
         {
-          getMap(apiKey,
+          addresses.length > 0 && getMap(apiKey,
             this.state.zoom,
             options,
             styles,
             markerType,
             addresses,
-            markerTitle,
-            markerSubtitle,
+            // markerTitle,
+            // markerSubtitle,
             onPress,
             markerCollection
           )

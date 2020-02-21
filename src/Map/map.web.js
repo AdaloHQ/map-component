@@ -4,13 +4,13 @@ import { markerWidth, markerHeight } from './config'
 import defaultMarker from './marker.png'
 
 const additionalStyles = StyleSheet.create({
-    markerView: {
-        marginLeft: -75,
-        marginTop: -markerHeight,
-        transform: [
-          { translateY: '-100%' },
-        ],
-    },
+    // markerView: {
+    //     marginLeft: -75,
+    //     marginTop: -markerHeight,
+    //     transform: [
+    //       { translateY: '-100%' },
+    //     ],
+    // },
     markerImage: {
         position: 'absolute',
         top: -markerHeight,
@@ -22,7 +22,7 @@ export const addNativeEvent = (apiKey) => {
     // Do nothing in case of web
 }
 
-export const getMap = (apiKey, zoom, options, styles, markerType, addresses, markerTitle, markerSubtitle, onPress, markerCollection) => {
+export const getMap = (apiKey, zoom, options, styles, markerType, addresses, /*markerTitle, markerSubtitle,*/onPress, markerCollection) => {
     const isSimple = markerType === 'simple'
     const defaultCenter = {
         lat: 41.850033,
@@ -45,10 +45,10 @@ export const getMap = (apiKey, zoom, options, styles, markerType, addresses, mar
                 >
                     <Image
                         resizeMode="contain"
-                        source={{uri: "https://s3.amazonaws.com/proton-uploads-production/499cb11629f511ada5c83ac84b4f026ee345a9bd3b17bdf6a7b06f3198052c3b.png"}}
+                        source={defaultMarker}
                         style={[styles.markerImage, additionalStyles.markerImage]}
                     />
-                    <View
+                    {/* <View
                         style={[styles.markerView, additionalStyles.markerView]}
                     >
                         <Text
@@ -61,7 +61,7 @@ export const getMap = (apiKey, zoom, options, styles, markerType, addresses, mar
                         >
                             {markerSubtitle}
                         </Text>
-                    </View>
+                    </View> */}
                 </View> :
                 markerCollection && markerCollection.map((marker, index) => (
                     <View
@@ -75,7 +75,7 @@ export const getMap = (apiKey, zoom, options, styles, markerType, addresses, mar
                             source={marker.markers_list.markerImage? {uri: marker.markers_list.markerImage.uri} : defaultMarker}
                             style={[styles.markerImage, additionalStyles.markerImage]}
                         />
-                        <View
+                        {/* <View
                             style={[styles.markerView, additionalStyles.markerView]}
                         >
                             <Text
@@ -88,7 +88,7 @@ export const getMap = (apiKey, zoom, options, styles, markerType, addresses, mar
                             >
                                 {marker.markers_list.markerSubtitle}
                             </Text>
-                        </View>
+                        </View> */}
                     </View>
                 ))
             }

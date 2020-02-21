@@ -41,16 +41,6 @@
           "type": "text"
         },
         {
-          "name": "markerTitle",
-          "displayName": "Marker Title",
-          "type": "text"
-        },
-        {
-          "name": "markerSubtitle",
-          "displayName": "Marker Subtitle",
-          "type": "text"
-        },
-        {
           "name": "markerImage",
           "displayName": "Marker Image",
           "type": "image"
@@ -72,16 +62,6 @@
         {
           "name": "markerAddress",
           "displayName": "Marker Address",
-          "type": "text"
-        },
-        {
-          "name": "markerTitle",
-          "displayName": "Marker Title",
-          "type": "text"
-        },
-        {
-          "name": "markerSubtitle",
-          "displayName": "Marker Subtitle",
           "type": "text"
         },
         {

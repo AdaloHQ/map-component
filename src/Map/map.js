@@ -10,7 +10,7 @@ export const addNativeEvent = (apiKey) => {
     }
 }
 
-export const getMap = (apiKey, zoom, options, styles, markerType, addresses, markerTitle, markerSubtitle, onPress, markerCollection) => {
+export const getMap = (apiKey, zoom, options, styles, markerType, addresses, /*markerTitle, markerSubtitle,*/ onPress, markerCollection) => {
     const mapType = options.mapTypeId === 'roadmap' ? 'standard' : options.mapTypeId
     const isSimple = markerType === 'simple'
     const defaultCenter = {
@@ -41,7 +41,7 @@ export const getMap = (apiKey, zoom, options, styles, markerType, addresses, mar
                     style={{alignItems: 'center', justifyContent: 'center'}}
                     onPress={onPress}
                 >
-                    <View
+                    {/* <View
                         style={styles.markerView}
                     >
                         <Text
@@ -54,10 +54,10 @@ export const getMap = (apiKey, zoom, options, styles, markerType, addresses, mar
                         >
                             {markerSubtitle}
                         </Text>
-                    </View>
+                    </View> */}
                     <Image
                         resizeMode="contain"
-                        source={{uri: "https://s3.amazonaws.com/proton-uploads-production/499cb11629f511ada5c83ac84b4f026ee345a9bd3b17bdf6a7b06f3198052c3b.png"}}
+                        source={defaultMarker}
                         style={styles.markerImage}
                     />
                 </Marker> :
@@ -71,7 +71,7 @@ export const getMap = (apiKey, zoom, options, styles, markerType, addresses, mar
                         key={`marker ${index}`}
                         onPress={marker.markers_list.onPress}
                     >
-                        <View
+                        {/* <View
                             style={styles.markerView}
                         >
                             <Text
@@ -84,7 +84,7 @@ export const getMap = (apiKey, zoom, options, styles, markerType, addresses, mar
                             >
                                 {marker.markers_list.markerSubtitle}
                             </Text>
-                        </View>
+                        </View> */}
                         <Image
                             resizeMode="contain"
                             source={marker.markers_list.markerImage? {uri: marker.markers_list.markerImage.uri} : defaultMarker}
