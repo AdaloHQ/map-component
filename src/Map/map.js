@@ -1,5 +1,6 @@
 import MapView, { Marker,  PROVIDER_GOOGLE } from 'react-native-maps';
-import { View, Text, Image, NativeModules, Platform } from 'react-native'
+import { View, Text, Image, NativeModules, Platform, Dimensions } from 'react-native'
+const { height, width } = Dimensions.get( 'window' );
 import defaultMarker from './marker.png'
 
 export const addNativeEvent = (apiKey) => {
@@ -17,6 +18,9 @@ export const getMap = (apiKey, zoom, options, styles, markerType, addresses, /*m
         lat: 41.850033,
         lng: -87.6500523
     }
+    const LATITUDE_DELTA = Math.exp(Math.log(360) - ((zoom + 1) * Math.LN2));
+    const LONGITUDE_DELTA = LATITUDE_DELTA * (width / height);
+
     const viewCenter = isSimple? (addresses.length > 0 ? { lat : addresses[0].location.lat, lng: addresses[0].location.lng } : defaultCenter) : defaultCenter
     return (
         <MapView
@@ -25,8 +29,8 @@ export const getMap = (apiKey, zoom, options, styles, markerType, addresses, /*m
             region={{
               latitude: viewCenter.lat,
               longitude: viewCenter.lng,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
+              latitudeDelta: LATITUDE_DELTA,
+              longitudeDelta: LONGITUDE_DELTA,
             }}
             mapType={mapType}
             customMapStyle={options.styles? options.styles: []}
