@@ -3,6 +3,7 @@
   "icon": "./icon.png",
   "defaultWidth": 600,
   "defaultHeight": 232,
+  "resizeY": true,
   "props": [
     {
       "name": "apiKey",

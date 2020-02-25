@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { ActivityIndicator, View, Text, StyleSheet, Image } from 'react-native'
-import BackgroundImage from './map.jpg'
+import BackgroundImage from './map.png'
 import Marker from './marker.png'
 import { getMap, addNativeEvent } from './map'
 import { markerWidth, markerHeight, geocodeURL } from './config'
@@ -21,11 +21,6 @@ const stylesStatus = StyleSheet.create({
 })
 
 const styles = StyleSheet.create({
-  wrapper: {
-    position: 'relative',
-    width: '100%',
-    height: 233
-  },
   container: {
     width: '100%',
     height: '100%'
@@ -72,7 +67,7 @@ export default class Map extends Component {
     mapStyle: null,
     customStyle: null,
     errorMessage: null,
-    zoom: 7,
+    zoom: 13,
     markerType: null,
     mapConfigLoaded: false,
   }
@@ -174,12 +169,14 @@ export default class Map extends Component {
       errorMessage,
       mapConfigLoaded
     } = this.state
+    let height = this.props._height
 
     if (editor) {
       return (
-        <View style={styles.wrapper}>
+        <View style={{width: '100%', height: height}}>
           <Image
             resizeMode="cover"
+            resizeMethod="scale"
             source={BackgroundImage}
             style={styles.image}
           />
@@ -219,7 +216,7 @@ export default class Map extends Component {
     }
 
     return (
-      <View style={styles.wrapper}>
+      <View style={{width: '100%', height: height}}>
         {
           addresses.length > 0 && getMap(apiKey,
             this.state.zoom,
