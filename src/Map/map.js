@@ -98,7 +98,7 @@ export const getMap = (apiKey, zoom, options, styles, markerType, addresses, /*m
                         </View> */}
                         <Image
                             resizeMode="contain"
-                            source={marker.markers_list.markerImage? {uri: marker.markers_list.markerImage.uri} : defaultMarker}
+                            source={/*marker.markers_list.markerImage? {uri: marker.markers_list.markerImage.uri} : */defaultMarker}
                             style={styles.markerImage}
                         />
                     </Marker>

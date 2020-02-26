@@ -42,11 +42,6 @@
           "type": "text"
         },
         {
-          "name": "markerImage",
-          "displayName": "Marker Image",
-          "type": "image"
-        },
-        {
           "name": "onPress",
           "displayName": "Click Actions",
           "type": "action"
@@ -64,11 +59,6 @@
           "name": "markerAddress",
           "displayName": "Marker Address",
           "type": "text"
-        },
-        {
-          "name": "markerImage",
-          "displayName": "Marker Image",
-          "type": "image"
         },
         {
           "name": "onPress",
