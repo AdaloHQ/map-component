@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
 import { ActivityIndicator, View, Text, StyleSheet, Image } from 'react-native'
-import BackgroundImage from './map.png'
-import Marker from './marker.png'
 import { getMap, addNativeEvent } from './map'
 import { markerWidth, markerHeight, geocodeURL } from './config'
 import axios from 'axios'
@@ -177,7 +175,7 @@ export default class Map extends Component {
           <Image
             resizeMode="cover"
             resizeMethod="scale"
-            source={BackgroundImage}
+            source={{uri: require(`./assets/${this.props.style.mapStyle}.jpg`)}}
             style={styles.image}
           />
         </View>

@@ -1,7 +1,7 @@
 import GoogleMapReact from 'google-map-react'
 import { View, Text, Image, StyleSheet } from 'react-native'
 import { markerWidth, markerHeight } from './config'
-import defaultMarker from './marker.png'
+import defaultMarker from './assets/marker.png'
 
 const additionalStyles = StyleSheet.create({
     // markerView: {
@@ -35,6 +35,17 @@ export const getMap = (apiKey, zoom, options, styles, markerType, addresses, /*m
             defaultCenter={viewCenter}
             defaultZoom={zoom}
             options={options}
+            onGoogleApiLoaded={({map, maps}) => {
+                if (!isSimple && addresses.length > 0) {
+                    const bounds = new google.maps.LatLngBounds();
+                    for (let i = 0; i < addresses.length; i++) {
+                        const marker = addresses[i];
+                        const newPoint = new google.maps.LatLng(marker.location.lat, marker.location.lng);
+                        bounds.extend(newPoint);
+                    }
+                    map.fitBounds(bounds);
+                }
+            }}
         >
             {
                 isSimple ?

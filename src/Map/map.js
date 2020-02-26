@@ -1,7 +1,7 @@
 import MapView, { Marker,  PROVIDER_GOOGLE } from 'react-native-maps';
 import { View, Text, Image, NativeModules, Platform, Dimensions } from 'react-native'
 const { height, width } = Dimensions.get( 'window' );
-import defaultMarker from './marker.png'
+import defaultMarker from './assets/marker.png'
 
 export const addNativeEvent = (apiKey) => {
     if (Platform.OS === 'ios') {
@@ -22,11 +22,12 @@ export const getMap = (apiKey, zoom, options, styles, markerType, addresses, /*m
     const LONGITUDE_DELTA = LATITUDE_DELTA * (width / height);
 
     const viewCenter = isSimple? (addresses.length > 0 ? { lat : addresses[0].location.lat, lng: addresses[0].location.lng } : defaultCenter) : defaultCenter
+    let mapRef = null;
     return (
         <MapView
             style={styles.container}
             provider={PROVIDER_GOOGLE}
-            region={{
+            initialRegion={{
               latitude: viewCenter.lat,
               longitude: viewCenter.lng,
               latitudeDelta: LATITUDE_DELTA,
@@ -34,6 +35,12 @@ export const getMap = (apiKey, zoom, options, styles, markerType, addresses, /*m
             }}
             mapType={mapType}
             customMapStyle={options.styles? options.styles: []}
+            ref={map => mapRef = map}
+            onMapReady={() => {
+                if (!isSimple) {
+                    mapRef.fitToElements(true)
+                }
+            }}
         >
             {
                 isSimple ?

@@ -12,13 +12,13 @@
     },
     {
       "name": "markerType",
-      "displayName": "Marker Type",
+      "displayName": "Number of Markers",
       "type": "text",
       "default": "simple",
       "control": {
         "type": "menu",
         "options": [
-          { "label": "Simple Marker", "value": "simple" },
+          { "label": "Single Marker", "value": "simple" },
           { "label": "Multiple Markers", "value": "multiple" }
         ]
       }
