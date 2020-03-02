@@ -8,7 +8,8 @@
     {
       "name": "apiKey",
       "displayName": "Google Maps API Key",
-      "type": "text"
+      "type": "text",
+      "global": true
     },
     {
       "name": "markerType",
