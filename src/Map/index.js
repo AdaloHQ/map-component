@@ -90,9 +90,11 @@ export default class Map extends Component {
       }
     } = this.props
 
+    console.log('-------------->', apiKey)
+
     if (!apiKey) {
       return this.setState({
-        errorMessage: "API Key is not set.",
+        errorMessage: "API Key is not set.....",
         mapConfigLoaded: true
       })
     }

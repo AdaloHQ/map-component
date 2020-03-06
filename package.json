@@ -9,6 +9,7 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "copy": "rm -rf ../mobile-previewer/node_modules/@protonapp/map-component/src/ && cp -r src ../mobile-previewer/node_modules/@protonapp/map-component/src && cp -r index.js ../mobile-previewer/node_modules/@protonapp/map-component/index.js",
+    "copy2": "rm -rf ../../packager/builds/AdaloApp/node_modules/@protonapp/map-component/src/ && cp -r src ../../packager/builds/AdaloApp/node_modules/@protonapp/map-component/src && cp -r index.js ../../packager/builds/AdaloApp/node_modules/@protonapp/map-component/index.js",
     "dev-local": "FOUNDRY_DEV_SERVER=http://localhost:3035 npx foundry dev",
     "dev": "proton dev"
   },
@@ -21,7 +22,9 @@
         "name": "Map",
         "manifest": "./src/Map/manifest.json"
       }
-    ]
+    ],
+    "iosInstallScript": null,
+    "androidInstallScript": "scripts/install_android.sh"
   },
   "peerDependencies": {
     "react": ">=16",
