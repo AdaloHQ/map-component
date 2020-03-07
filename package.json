@@ -23,7 +23,7 @@
         "manifest": "./src/Map/manifest.json"
       }
     ],
-    "iosInstallScript": null,
+    "iosInstallScript": "scripts/install_ios.sh",
     "androidInstallScript": "scripts/install_android.sh"
   },
   "peerDependencies": {
