@@ -28,7 +28,7 @@ export const getMap = (apiKey, zoom, options, styles, markerType, addresses, /*m
         lat: 41.850033,
         lng: -87.6500523
     }
-    const viewCenter = isSimple? (addresses.length > 0 ? { lat : addresses[0].location.lat, lng: addresses[0].location.lng } : defaultCenter) : defaultCenter
+    const viewCenter = (addresses.length > 0 ? { lat : addresses[0].location.lat, lng: addresses[0].location.lng } : defaultCenter)
     return (
         <GoogleMapReact
             bootstrapURLKeys={{ key: apiKey }}
@@ -36,7 +36,7 @@ export const getMap = (apiKey, zoom, options, styles, markerType, addresses, /*m
             defaultZoom={zoom}
             options={options}
             onGoogleApiLoaded={({map, maps}) => {
-                if (!isSimple && addresses.length > 0) {
+                if (!isSimple && addresses.length > 1) {
                     const bounds = new google.maps.LatLngBounds();
                     for (let i = 0; i < addresses.length; i++) {
                         const marker = addresses[i];
