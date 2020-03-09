@@ -169,11 +169,10 @@ export default class Map extends Component {
       errorMessage,
       mapConfigLoaded
     } = this.state
-    let height = this.props._height
 
     if (editor) {
       return (
-        <View style={{width: '100%', height: height}}>
+        <View style={{ width: '100%', height: '100%' }}>
           <Image
             resizeMode="cover"
             resizeMethod="scale"
