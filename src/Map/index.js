@@ -215,7 +215,7 @@ export default class Map extends Component {
     }
 
     return (
-      <View style={{width: '100%', height: height}}>
+      <View style={{ width: '100%', height: '100%' }}>
         {
           addresses.length > 0 && getMap(apiKey,
             this.state.zoom,
