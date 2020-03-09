@@ -21,7 +21,7 @@ export const getMap = (apiKey, zoom, options, styles, markerType, addresses, /*m
     const LATITUDE_DELTA = Math.exp(Math.log(360) - ((zoom + 1) * Math.LN2));
     const LONGITUDE_DELTA = LATITUDE_DELTA * (width / height);
 
-    const viewCenter = isSimple? (addresses.length > 0 ? { lat : addresses[0].location.lat, lng: addresses[0].location.lng } : defaultCenter) : defaultCenter
+    const viewCenter = (addresses.length > 0 ? { lat : addresses[0].location.lat, lng: addresses[0].location.lng } : defaultCenter)
     let mapRef = null;
     return (
         <MapView
@@ -37,7 +37,7 @@ export const getMap = (apiKey, zoom, options, styles, markerType, addresses, /*m
             customMapStyle={options.styles? options.styles: []}
             ref={map => mapRef = map}
             onMapReady={() => {
-                if (!isSimple) {
+                if (!isSimple && addresses.length > 1) {
                     mapRef.fitToElements(true)
                 }
             }}
