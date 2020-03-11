@@ -98,7 +98,7 @@ export default class Map extends Component {
         mapConfigLoaded: true
       })
     }
-    if (!markerAddress) {
+    if (markerType === 'simple' && !markerAddress) {
       return this.setState({
         errorMessage: "Marker address is not set.",
         mapConfigLoaded: true
