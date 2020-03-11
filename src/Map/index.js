@@ -57,7 +57,7 @@ export default class Map extends Component {
   state = {
     apiKey: null,
     markerAddress: null,
-    addresses: [],
+    addresses: null,
     // markerTitle: null,
     // markerSubtitle: null,
     markerImage: null,
@@ -68,6 +68,7 @@ export default class Map extends Component {
     zoom: 13,
     markerType: null,
     mapConfigLoaded: false,
+    loaded: false,
   }
   isBrowser = true
 
@@ -98,12 +99,7 @@ export default class Map extends Component {
         mapConfigLoaded: true
       })
     }
-    if (markerType === 'simple' && !markerAddress) {
-      return this.setState({
-        errorMessage: "Marker address is not set.",
-        mapConfigLoaded: true
-      })
-    }
+
     addNativeEvent(apiKey)
     this.setState({
       apiKey,
@@ -167,7 +163,8 @@ export default class Map extends Component {
       mapStyle,
       customStyle,
       errorMessage,
-      mapConfigLoaded
+      mapConfigLoaded,
+      loaded
     } = this.state
 
     if (editor) {
@@ -199,8 +196,12 @@ export default class Map extends Component {
       options.styles = JSON.parse(customStyle)
     }
 
-    const addr = markerType === 'simple' ? [markerAddress] : markerCollection? markerCollection.map(m => m.markers_list.markerAddress) : []
-    if (addresses.length === 0) {
+    let addr = markerType === 'simple' ?
+            markerAddress ? [markerAddress] : [] :
+            markerCollection?
+              markerCollection.map(m => m.markers_list.markerAddress) : []
+
+    if (!loaded) {
       axios.post(geocodeURL, {
           addresses: addr,
           key: apiKey
@@ -209,6 +210,11 @@ export default class Map extends Component {
         this.setState({
           addresses: res.data
         })
+        if (markerType === 'simple' || (markerType !== 'simple' && markerCollection)) {
+          this.setState({
+            loaded: true
+          })
+        }
       })
       .catch(err => {
       })
@@ -217,7 +223,7 @@ export default class Map extends Component {
     return (
       <View style={{ width: '100%', height: '100%' }}>
         {
-          addresses.length > 0 && getMap(apiKey,
+          loaded && getMap(apiKey,
             this.state.zoom,
             options,
             styles,

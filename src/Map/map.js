@@ -15,8 +15,8 @@ export const getMap = (apiKey, zoom, options, styles, markerType, addresses, /*m
     const mapType = options.mapTypeId === 'roadmap' ? 'standard' : options.mapTypeId
     const isSimple = markerType === 'simple'
     const defaultCenter = {
-        lat: 41.850033,
-        lng: -87.6500523
+        lat: 40.7831,
+        lng: -73.9712
     }
     const LATITUDE_DELTA = Math.exp(Math.log(360) - ((zoom + 1) * Math.LN2));
     const LONGITUDE_DELTA = LATITUDE_DELTA * (width / height);
