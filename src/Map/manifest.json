@@ -9,7 +9,8 @@
       "name": "apiKey",
       "displayName": "Google Maps API Key",
       "type": "text",
-      "global": true
+      "global": true,
+      "helpText": "Get your API Key [here](https://developers.google.com/maps/documentation/javascript/get-api-key)"
     },
     {
       "name": "markerType",
@@ -91,7 +92,9 @@
           "name": "customStyle",
           "displayName": "Custom Style JSON",
           "type": "text",
-          "placeholder": "Paste JSON..."
+          "placeholder": "Paste JSON...",
+          "disableDynamicValues": true,
+          "helpText": "Learn More about Customizing your Map [Here](https://help.adalo.com/component-basics/maps#customizing-the-maps-with-with-json)"
         }
       ]
     }
