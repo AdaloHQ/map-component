@@ -91,8 +91,6 @@ export default class Map extends Component {
       }
     } = this.props
 
-    console.log('-------------->', apiKey)
-
     if (!apiKey) {
       return this.setState({
         errorMessage: "API Key is not set.....",
@@ -101,6 +99,7 @@ export default class Map extends Component {
     }
 
     addNativeEvent(apiKey)
+
     this.setState({
       apiKey,
       markerType,
@@ -150,16 +149,41 @@ export default class Map extends Component {
     };
   }
 
+  loadAddresses = async () => {
+    let { loaded } = this.state
+
+    let { apiKey, markerType, markerCollection, markers: { markerAddress } } = this.props
+
+    let addr = markerType === 'simple'
+      ? markerAddress ? [markerAddress] : []
+      : markerCollection
+        ?  markerCollection.map(m => m.markers_list.markerAddress)
+        : []
+
+    if (addr.length > 0 && !loaded) {
+      let result = await axios.post(
+        geocodeURL,
+        { addresses: addr, key: apiKey }
+      )
+
+      this.setState({
+        addresses: result.data
+      })
+
+      if (markerType === 'simple' || (markerType !== 'simple' && markerCollection)) {
+        this.setState({
+          loaded: true
+        })
+      }
+    }
+
+  }
+
   render() {
-    let { editor, markerCollection } = this.props
+    let { apiKey, markerType, editor, markerCollection, onPress } = this.props
+
     let {
-      apiKey,
-      markerType,
-      markerAddress,
       addresses,
-      // markerTitle,
-      // markerSubtitle,
-      onPress,
       mapStyle,
       customStyle,
       errorMessage,
@@ -180,6 +204,8 @@ export default class Map extends Component {
       )
     }
 
+    this.loadAddresses()
+
     if (!mapConfigLoaded) {
       return <ActivityIndicator />
     }
@@ -192,32 +218,9 @@ export default class Map extends Component {
       fullscreenControl: false,
       mapTypeId: mapStyle,
     }
+
     if (customStyle) {
       options.styles = JSON.parse(customStyle)
-    }
-
-    let addr = markerType === 'simple' ?
-            markerAddress ? [markerAddress] : [] :
-            markerCollection?
-              markerCollection.map(m => m.markers_list.markerAddress) : []
-
-    if (!loaded) {
-      axios.post(geocodeURL, {
-          addresses: addr,
-          key: apiKey
-      })
-      .then(res => {
-        this.setState({
-          addresses: res.data
-        })
-        if (markerType === 'simple' || (markerType !== 'simple' && markerCollection)) {
-          this.setState({
-            loaded: true
-          })
-        }
-      })
-      .catch(err => {
-      })
     }
 
     return (
