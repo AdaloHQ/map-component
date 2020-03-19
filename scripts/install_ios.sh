@@ -65,6 +65,11 @@ post_install do |installer|
         config.build_settings['CLANG_ENABLE_MODULES'] = 'No'
       end
     end
+    if target.name == 'Google-Maps-iOS-Utils'
+      target.build_configurations.each do |config|
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '8.0'
+      end
+    end
     if target.name == \"React\"
       target.remove_from_project
     end
