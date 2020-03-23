@@ -34,11 +34,10 @@ sed -i.bak '/targetSdkVersion/a\
 
 # AndroidManifest.xml
 
-sed -i.bak "$(cat <<EOF
+cat <<EOF > /tmp/adalo-sed
 /com.facebook.react.devsupport/a\\
-    <meta-data\\
-    android:name=\"com.google.android.geo.API_KEY\"\\
-    android:value=\"${key}\"/>\\
+    <meta-data android:name="com.google.android.geo.API_KEY" android:value="${key}" />\\
 EOF
-)" app/src/main/AndroidManifest.xml
+
+sed -i.bak "$(cat /tmp/adalo-sed)" app/src/main/AndroidManifest.xml
 
