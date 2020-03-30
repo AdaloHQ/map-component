@@ -64,6 +64,7 @@ export default class Map extends Component {
     onPress: null,
     mapStyle: null,
     customStyle: null,
+    currentLocation: false,
     errorMessage: null,
     zoom: 13,
     markerType: null,
@@ -87,7 +88,7 @@ export default class Map extends Component {
         markerAddress, /*markerTitle, markerSubtitle,*/ markerImage, onPress
       },
       style: {
-        mapStyle, customStyle
+        mapStyle, customStyle, currentLocation
       }
     } = this.props
 
@@ -109,6 +110,7 @@ export default class Map extends Component {
       onPress,
       mapStyle,
       customStyle,
+      currentLocation,
       errorMessage: null,
       mapConfigLoaded: true
     })
@@ -186,6 +188,7 @@ export default class Map extends Component {
       addresses,
       mapStyle,
       customStyle,
+      currentLocation,
       errorMessage,
       mapConfigLoaded,
       loaded
@@ -232,6 +235,7 @@ export default class Map extends Component {
             styles,
             markerType,
             addresses,
+            currentLocation,
             // markerTitle,
             // markerSubtitle,
             onPress,

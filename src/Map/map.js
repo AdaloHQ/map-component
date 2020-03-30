@@ -11,7 +11,7 @@ export const addNativeEvent = (apiKey) => {
     }
 }
 
-export const getMap = (apiKey, zoom, options, styles, markerType, addresses, /*markerTitle, markerSubtitle,*/ onPress, markerCollection) => {
+export const getMap = (apiKey, zoom, options, styles, markerType, addresses, currentLocation, /*markerTitle, markerSubtitle,*/ onPress, markerCollection) => {
     const mapType = options.mapTypeId === 'roadmap' ? 'standard' : options.mapTypeId
     const isSimple = markerType === 'simple'
     const defaultCenter = {
@@ -33,6 +33,7 @@ export const getMap = (apiKey, zoom, options, styles, markerType, addresses, /*m
               latitudeDelta: LATITUDE_DELTA,
               longitudeDelta: LONGITUDE_DELTA,
             }}
+            showsUserLocation={currentLocation}
             mapType={mapType}
             customMapStyle={options.styles? options.styles: []}
             ref={map => mapRef = map}

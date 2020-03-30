@@ -22,7 +22,7 @@ export const addNativeEvent = (apiKey) => {
     // Do nothing in case of web
 }
 
-export const getMap = (apiKey, zoom, options, styles, markerType, addresses, /*markerTitle, markerSubtitle,*/onPress, markerCollection) => {
+export const getMap = (apiKey, zoom, options, styles, markerType, addresses, currentLocation, /*markerTitle, markerSubtitle,*/onPress, markerCollection) => {
     const isSimple = markerType === 'simple'
     const defaultCenter = {
         lat: 40.7831,
