@@ -1,7 +1,7 @@
 {
   "name": "@protonapp/map-component",
-  "version": "0.0.12",
-  "description": "Map Component for Proton",
+  "version": "0.0.15",
+  "description": "Map Component for Adalo",
   "main": "index.js",
   "scripts": {
     "build": "proton build",
@@ -13,9 +13,10 @@
     "dev-local": "FOUNDRY_DEV_SERVER=http://localhost:3035 npx foundry dev",
     "dev": "proton dev"
   },
-  "author": "Jeremy Blalock",
+  "author": "Adalo",
   "license": "ISC",
-  "proton": {
+  "adalo": {
+    "logo": "./GoogleMaps-logo.png",
     "displayName": "Map Component",
     "components": [
       {
@@ -31,11 +32,11 @@
     "react-dom": ">=16"
   },
   "devDependencies": {
+    "@adalo/cli": "^0.0.39",
     "@babel/core": "^7.1.2",
     "@babel/plugin-proposal-class-properties": "^7.1.0",
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
-    "@protonapp/proton-cli": "^0.0.23",
     "@storybook/addon-actions": "^4.0.2",
     "@storybook/addon-links": "^4.0.2",
     "@storybook/addons": "^4.0.2",
