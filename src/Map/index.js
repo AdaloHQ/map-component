@@ -58,10 +58,10 @@ const styles = StyleSheet.create({
 })
 
 const placeholderImages = {
-  hybrid: hybrid,
-  roadmap: roadmap,
-  satellite: satellite,
-  terrain: terrain,
+  hybrid,
+  roadmap,
+  satellite,
+  terrain,
 }
 
 export default class Map extends Component {
