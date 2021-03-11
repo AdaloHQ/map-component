@@ -3,6 +3,10 @@ import { ActivityIndicator, View, Text, StyleSheet, Image } from 'react-native'
 import { getMap, addNativeEvent } from './map'
 import { markerWidth, markerHeight, geocodeURL } from './config'
 import axios from 'axios'
+import hybrid from './assets/hybrid.jpg'
+import roadmap from './assets/roadmap.jpg'
+import satellite from './assets/satellite.jpg'
+import terrain from './assets/terrain.jpg'
 
 const stylesStatus = StyleSheet.create({
   wrapper: {
@@ -21,7 +25,7 @@ const stylesStatus = StyleSheet.create({
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    height: '100%'
+    height: '100%',
   },
   image: {
     width: '100%',
@@ -49,9 +53,16 @@ const styles = StyleSheet.create({
   // },
   markerImage: {
     width: markerWidth,
-    height: markerHeight
-  }
+    height: markerHeight,
+  },
 })
+
+const placeholderImages = {
+  hybrid: hybrid,
+  roadmap: roadmap,
+  satellite: satellite,
+  terrain: terrain,
+}
 
 export default class Map extends Component {
   state = {
@@ -85,17 +96,17 @@ export default class Map extends Component {
       apiKey,
       markerType,
       markers: {
-        markerAddress, /*markerTitle, markerSubtitle,*/ markerImage, onPress
+        markerAddress,
+        /*markerTitle, markerSubtitle,*/ markerImage,
+        onPress,
       },
-      style: {
-        mapStyle, customStyle, currentLocation
-      }
+      style: { mapStyle, customStyle, currentLocation },
     } = this.props
 
     if (!apiKey) {
       return this.setState({
-        errorMessage: "API Key is not set.....",
-        mapConfigLoaded: true
+        errorMessage: 'API Key is not set.....',
+        mapConfigLoaded: true,
       })
     }
 
@@ -112,77 +123,93 @@ export default class Map extends Component {
       customStyle,
       currentLocation,
       errorMessage: null,
-      mapConfigLoaded: true
+      mapConfigLoaded: true,
     })
   }
 
   getMapOptions(maps) {
     return {
-        // streetViewControl: false,
-        // scaleControl: true,
-        fullscreenControl: false,
-        // styles: [{
-        //     featureType: "poi.business",
-        //     elementType: "labels",
-        //     stylers: [{
-        //         visibility: "off"
-        //     }]
-        // }],
-        // gestureHandling: "greedy",
-        // disableDoubleClickZoom: true,
-        // minZoom: 1,
-        // maxZoom: 18,
+      // streetViewControl: false,
+      // scaleControl: true,
+      fullscreenControl: false,
+      // styles: [{
+      //     featureType: "poi.business",
+      //     elementType: "labels",
+      //     stylers: [{
+      //         visibility: "off"
+      //     }]
+      // }],
+      // gestureHandling: "greedy",
+      // disableDoubleClickZoom: true,
+      // minZoom: 1,
+      // maxZoom: 18,
 
-        // mapTypeControl: true,
-        mapTypeId: maps.MapTypeId.ROADMAP,
-        // mapTypeControlOptions: {
-        //     style: maps.MapTypeControlStyle.HORIZONTAL_BAR,
-        //     position: maps.ControlPosition.BOTTOM_CENTER,
-        //     mapTypeIds: [
-        //         maps.MapTypeId.ROADMAP,
-        //         maps.MapTypeId.SATELLITE,
-        //         maps.MapTypeId.HYBRID,
-        //         maps.MapTypeId.TERRAIN
-        //     ]
-        // },
+      // mapTypeControl: true,
+      mapTypeId: maps.MapTypeId.ROADMAP,
+      // mapTypeControlOptions: {
+      //     style: maps.MapTypeControlStyle.HORIZONTAL_BAR,
+      //     position: maps.ControlPosition.BOTTOM_CENTER,
+      //     mapTypeIds: [
+      //         maps.MapTypeId.ROADMAP,
+      //         maps.MapTypeId.SATELLITE,
+      //         maps.MapTypeId.HYBRID,
+      //         maps.MapTypeId.TERRAIN
+      //     ]
+      // },
 
-        // zoomControl: true,
-        // clickableIcons: false
-    };
+      // zoomControl: true,
+      // clickableIcons: false
+    }
   }
 
   loadAddresses = async () => {
     let { loaded } = this.state
 
-    let { apiKey, markerType, markerCollection, markers: { markerAddress } } = this.props
+    let {
+      apiKey,
+      markerType,
+      markerCollection,
+      markers: { markerAddress },
+    } = this.props
 
-    let addr = markerType === 'simple'
-      ? markerAddress ? [markerAddress] : []
-      : markerCollection
-        ?  markerCollection.map(m => m.markers_list.markerAddress)
+    let addr =
+      markerType === 'simple'
+        ? markerAddress
+          ? [markerAddress]
+          : []
+        : markerCollection
+        ? markerCollection.map((m) => m.markers_list.markerAddress)
         : []
 
     if (addr.length > 0 && !loaded) {
-      let result = await axios.post(
-        geocodeURL,
-        { addresses: addr, key: apiKey }
-      )
-
-      this.setState({
-        addresses: result.data
+      let result = await axios.post(geocodeURL, {
+        addresses: addr,
+        key: apiKey,
       })
 
-      if (markerType === 'simple' || (markerType !== 'simple' && markerCollection)) {
+      this.setState({
+        addresses: result.data,
+      })
+
+      if (
+        markerType === 'simple' ||
+        (markerType !== 'simple' && markerCollection)
+      ) {
         this.setState({
-          loaded: true
+          loaded: true,
         })
       }
     }
-
   }
 
   render() {
-    let { apiKey, markerType, editor, markerCollection, onPress } = this.props
+    let {
+      apiKey,
+      markerType,
+      editor,
+      markerCollection,
+      markers: { onPress },
+    } = this.props
 
     let {
       addresses,
@@ -191,17 +218,15 @@ export default class Map extends Component {
       currentLocation,
       errorMessage,
       mapConfigLoaded,
-      loaded
+      loaded,
     } = this.state
 
     if (editor) {
       return (
         <View style={{ width: '100%', height: '100%' }}>
-          <Image
-            resizeMode="cover"
-            resizeMethod="scale"
-            source={{uri: require(`./assets/${this.props.style.mapStyle}.jpg`)}}
-            style={styles.image}
+          <img
+            src={placeholderImages[this.props.style.mapStyle]}
+            style={{ objectFit: 'cover', width: 'auto', height: '100%' }}
           />
         </View>
       )
@@ -228,8 +253,9 @@ export default class Map extends Component {
 
     return (
       <View style={{ width: '100%', height: '100%' }}>
-        {
-          loaded && getMap(apiKey,
+        {loaded &&
+          getMap(
+            apiKey,
             this.state.zoom,
             options,
             styles,
@@ -240,8 +266,7 @@ export default class Map extends Component {
             // markerSubtitle,
             onPress,
             markerCollection
-          )
-        }
+          )}
       </View>
     )
   }
