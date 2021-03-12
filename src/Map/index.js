@@ -31,26 +31,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-  // markerView: {
-  //   display: 'flex',
-  //   flexDirection: 'column',
-  //   width: 150,
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  //   backgroundColor: 'white',
-  //   borderRadius: 5,
-  //   paddingLeft: 10,
-  //   paddingRight: 10,
-  // },
-  // markerTitle: {
-  //   fontSize: 20,
-  //   textAlign: 'center',
-  //   marginBottom: 5,
-  // },
-  // markerSubtitle: {
-  //   fontSize: 15,
-  //   textAlign: 'center',
-  // },
   markerImage: {
     width: markerWidth,
     height: markerHeight,
@@ -69,8 +49,6 @@ export default class Map extends Component {
     apiKey: null,
     markerAddress: null,
     addresses: null,
-    // markerTitle: null,
-    // markerSubtitle: null,
     markerImage: null,
     onPress: null,
     mapStyle: null,
@@ -95,11 +73,7 @@ export default class Map extends Component {
     const {
       apiKey,
       markerType,
-      markers: {
-        markerAddress,
-        /*markerTitle, markerSubtitle,*/ markerImage,
-        onPress,
-      },
+      markers: { markerAddress, markerImage, onPress },
       style: { mapStyle, customStyle, currentLocation },
     } = this.props
 
@@ -116,8 +90,6 @@ export default class Map extends Component {
       apiKey,
       markerType,
       markerAddress,
-      // markerTitle,
-      // markerSubtitle,
       onPress,
       mapStyle,
       customStyle,
@@ -129,36 +101,8 @@ export default class Map extends Component {
 
   getMapOptions(maps) {
     return {
-      // streetViewControl: false,
-      // scaleControl: true,
       fullscreenControl: false,
-      // styles: [{
-      //     featureType: "poi.business",
-      //     elementType: "labels",
-      //     stylers: [{
-      //         visibility: "off"
-      //     }]
-      // }],
-      // gestureHandling: "greedy",
-      // disableDoubleClickZoom: true,
-      // minZoom: 1,
-      // maxZoom: 18,
-
-      // mapTypeControl: true,
       mapTypeId: maps.MapTypeId.ROADMAP,
-      // mapTypeControlOptions: {
-      //     style: maps.MapTypeControlStyle.HORIZONTAL_BAR,
-      //     position: maps.ControlPosition.BOTTOM_CENTER,
-      //     mapTypeIds: [
-      //         maps.MapTypeId.ROADMAP,
-      //         maps.MapTypeId.SATELLITE,
-      //         maps.MapTypeId.HYBRID,
-      //         maps.MapTypeId.TERRAIN
-      //     ]
-      // },
-
-      // zoomControl: true,
-      // clickableIcons: false
     }
   }
 
@@ -262,8 +206,6 @@ export default class Map extends Component {
             markerType,
             addresses,
             currentLocation,
-            // markerTitle,
-            // markerSubtitle,
             onPress,
             markerCollection
           )}
