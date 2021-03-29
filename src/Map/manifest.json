@@ -29,19 +29,24 @@
       "name": "markerCollection",
       "displayName": "Marker Collection",
       "type": "list",
-      "enabled": { "markerType": "multiple"}
+      "enabled": { "markerType": "multiple" }
     }
   ],
   "childComponents": [
     {
       "name": "markers",
       "displayName": "Markers",
-      "enabled": { "markerType": "simple"},
+      "enabled": { "markerType": "simple" },
       "props": [
         {
           "name": "markerAddress",
           "displayName": "Marker Address",
           "type": "text"
+        },
+        {
+          "name": "markerImage",
+          "displayName": "Marker Image",
+          "type": "image"
         },
         {
           "name": "onPress",
@@ -55,12 +60,17 @@
       "displayName": "Markers",
       "role": "listItem",
       "reference": "markerCollection",
-      "enabled": { "markerType": "multiple"},
+      "enabled": { "markerType": "multiple" },
       "props": [
         {
           "name": "markerAddress",
           "displayName": "Marker Address",
           "type": "text"
+        },
+        {
+          "name": "markerImage",
+          "displayName": "Marker Image",
+          "type": "image"
         },
         {
           "name": "onPress",
