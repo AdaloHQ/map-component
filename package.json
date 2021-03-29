@@ -1,6 +1,6 @@
 {
   "name": "@protonapp/map-component",
-  "version": "0.0.15",
+  "version": "0.0.17",
   "description": "Map Component for Adalo",
   "main": "index.js",
   "scripts": {
@@ -32,7 +32,7 @@
     "react-dom": ">=16"
   },
   "devDependencies": {
-    "@adalo/cli": "^0.0.39",
+    "@adalo/cli": "^0.0.41",
     "@babel/core": "^7.1.2",
     "@babel/plugin-proposal-class-properties": "^7.1.0",
     "@babel/preset-env": "^7.1.0",
