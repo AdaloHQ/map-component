@@ -4,13 +4,6 @@ import { markerWidth, markerHeight } from './config'
 import defaultMarker from './assets/marker.png'
 
 const additionalStyles = StyleSheet.create({
-  // markerView: {
-  //     marginLeft: -75,
-  //     marginTop: -markerHeight,
-  //     transform: [
-  //       { translateY: '-100%' },
-  //     ],
-  // },
   markerImage: {
     position: 'absolute',
     top: -markerHeight,
@@ -30,7 +23,7 @@ export const getMap = (
   markerType,
   addresses,
   currentLocation,
-  /*markerTitle, markerSubtitle,*/ onPress,
+  onPress,
   markerCollection,
   markerImage
 ) => {
@@ -75,20 +68,6 @@ export const getMap = (
             source={markerImage ? markerImage : defaultMarker}
             style={[styles.markerImage, additionalStyles.markerImage]}
           />
-          {/* <View
-                        style={[styles.markerView, additionalStyles.markerView]}
-                    >
-                        <Text
-                            style={styles.markerTitle}
-                        >
-                            {markerTitle}
-                        </Text>
-                        <Text
-                            style={styles.markerSubtitle}
-                        >
-                            {markerSubtitle}
-                        </Text>
-                    </View> */}
         </View>
       ) : (
         markerCollection &&
@@ -108,20 +87,6 @@ export const getMap = (
               }
               style={[styles.markerImage, additionalStyles.markerImage]}
             />
-            {/* <View
-                            style={[styles.markerView, additionalStyles.markerView]}
-                        >
-                            <Text
-                                style={styles.markerTitle}
-                            >
-                                {marker.markers_list.markerTitle}
-                            </Text>
-                            <Text
-                                style={styles.markerSubtitle}
-                            >
-                                {marker.markers_list.markerSubtitle}
-                            </Text>
-                        </View> */}
           </View>
         ))
       )}

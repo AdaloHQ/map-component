@@ -194,7 +194,7 @@ export default class Map extends Component {
     if (customStyle) {
       options.styles = JSON.parse(customStyle)
     }
-
+    console.log(this.props)
     return (
       <View style={{ width: '100%', height: '100%' }}>
         {loaded &&

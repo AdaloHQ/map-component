@@ -26,8 +26,9 @@ export const getMap = (
   markerType,
   addresses,
   currentLocation,
-  /*markerTitle, markerSubtitle,*/ onPress,
-  markerCollection
+  onPress,
+  markerCollection,
+  markerImage
 ) => {
   const mapType =
     options.mapTypeId === 'roadmap' ? 'standard' : options.mapTypeId
@@ -73,20 +74,6 @@ export const getMap = (
           style={{ alignItems: 'center', justifyContent: 'center' }}
           onPress={onPress}
         >
-          {/* <View
-                        style={styles.markerView}
-                    >
-                        <Text
-                            style={styles.markerTitle}
-                        >
-                            {markerTitle}
-                        </Text>
-                        <Text
-                            style={styles.markerSubtitle}
-                        >
-                            {markerSubtitle}
-                        </Text>
-                    </View> */}
           <Image
             resizeMode="contain"
             source={markerImage ? markerImage : defaultMarker}
@@ -107,20 +94,6 @@ export const getMap = (
             key={`marker ${index}`}
             onPress={marker.markers_list.onPress}
           >
-            {/* <View
-                            style={styles.markerView}
-                        >
-                            <Text
-                                style={styles.markerTitle}
-                            >
-                                {marker.markers_list.markerTitle}
-                            </Text>
-                            <Text
-                                style={styles.markerSubtitle}
-                            >
-                                {marker.markers_list.markerSubtitle}
-                            </Text>
-                        </View> */}
             <Image
               resizeMode="contain"
               source={
