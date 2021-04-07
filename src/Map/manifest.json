@@ -95,7 +95,7 @@
           }
         },
         {
-          "name": "markerImage",
+          "name": "listMarkerImage",
           "displayName": "Marker Image",
           "type": "image",
           "enabled": { "markerSource": "custom" }

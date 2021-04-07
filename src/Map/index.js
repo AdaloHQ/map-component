@@ -165,8 +165,6 @@ export default class Map extends Component {
       loaded,
     } = this.state
 
-    console.log('markerSource: ', markerSource)
-
     if (editor) {
       return (
         <View style={{ width: '100%', height: '100%' }}>
