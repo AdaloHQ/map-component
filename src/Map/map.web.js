@@ -37,10 +37,6 @@ export const getMap = (
     addresses.length > 0
       ? { lat: addresses[0].location.lat, lng: addresses[0].location.lng }
       : defaultCenter
-
-  console.log('markerSourceMap: ', markerSource)
-  console.log('markerImageMap: ', markerImage)
-
   return (
     <GoogleMapReact
       bootstrapURLKeys={{ key: apiKey }}
@@ -90,14 +86,9 @@ export const getMap = (
             <Image
               resizeMode="contain"
               source={
-<<<<<<< HEAD
                 marker.markers_list.markerImage &&
                 marker.markers_list.markerSource === 'custom'
                   ? marker.markers_list.markerImage
-=======
-                marker.markers_list.listMarkerImage
-                  ? marker.markers_list.listMarkerImage
->>>>>>> 5babb4366e67bc58ba822a2cae991c93dbf48901
                   : defaultMarker
               }
               style={[styles.markerImage, additionalStyles.markerImage]}
