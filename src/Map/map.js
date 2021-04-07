@@ -28,7 +28,8 @@ export const getMap = (
   currentLocation,
   onPress,
   markerCollection,
-  markerImage
+  markerImage,
+  markerSource
 ) => {
   const mapType =
     options.mapTypeId === 'roadmap' ? 'standard' : options.mapTypeId
@@ -76,7 +77,11 @@ export const getMap = (
         >
           <Image
             resizeMode="contain"
-            source={markerImage ? markerImage : defaultMarker}
+            source={
+              markerImage && markerSource === 'custom'
+                ? markerImage
+                : defaultMarker
+            }
             style={styles.markerImage}
           />
         </Marker>
@@ -97,7 +102,8 @@ export const getMap = (
             <Image
               resizeMode="contain"
               source={
-                marker.markers_list.markerImage
+                marker.markers_list.markerImage &&
+                marker.markers_list.markerSource === 'custom'
                   ? marker.markers_list.markerImage
                   : defaultMarker
               }

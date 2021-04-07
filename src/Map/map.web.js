@@ -25,7 +25,8 @@ export const getMap = (
   currentLocation,
   onPress,
   markerCollection,
-  markerImage
+  markerImage,
+  markerSource
 ) => {
   const isSimple = markerType === 'simple'
   const defaultCenter = {
@@ -36,6 +37,10 @@ export const getMap = (
     addresses.length > 0
       ? { lat: addresses[0].location.lat, lng: addresses[0].location.lng }
       : defaultCenter
+
+  console.log('markerSourceMap: ', markerSource)
+  console.log('markerImageMap: ', markerImage)
+
   return (
     <GoogleMapReact
       bootstrapURLKeys={{ key: apiKey }}
@@ -65,7 +70,11 @@ export const getMap = (
         >
           <Image
             resizeMode="contain"
-            source={markerImage ? markerImage : defaultMarker}
+            source={
+              markerImage && markerSource === 'custom'
+                ? markerImage
+                : defaultMarker
+            }
             style={[styles.markerImage, additionalStyles.markerImage]}
           />
         </View>
@@ -81,7 +90,8 @@ export const getMap = (
             <Image
               resizeMode="contain"
               source={
-                marker.markers_list.markerImage
+                marker.markers_list.markerImage &&
+                marker.markers_list.markerSource === 'custom'
                   ? marker.markers_list.markerImage
                   : defaultMarker
               }
