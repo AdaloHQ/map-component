@@ -68,7 +68,7 @@
           "type": "text"
         },
         {
-          "name": "markerImage",
+          "name": "listMarkerImage",
           "displayName": "Marker Image",
           "type": "image"
         },

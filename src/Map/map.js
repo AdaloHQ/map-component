@@ -97,8 +97,8 @@ export const getMap = (
             <Image
               resizeMode="contain"
               source={
-                marker.markers_list.markerImage
-                  ? marker.markers_list.markerImage
+                marker.markers_list.listMarkerImage
+                  ? marker.markers_list.listMarkerImage
                   : defaultMarker
               }
               style={styles.markerImage}
