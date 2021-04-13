@@ -87,7 +87,7 @@ export const getMap = (
             <Image
               resizeMode="contain"
               source={
-                marker.markers_list.markerImage &&
+                marker.markers_list.listMarkerImage &&
                 marker.markers_list.markerSource === 'custom'
                   ? marker.markers_list.listMarkerImage
                   : defaultMarker
