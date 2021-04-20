@@ -45,7 +45,7 @@
         },
         {
           "name": "markerSource",
-          "displayName": "Marker Source",
+          "displayName": "Marker Image",
           "type": "text",
           "default": "default",
           "control": {
