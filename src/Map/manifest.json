@@ -29,19 +29,38 @@
       "name": "markerCollection",
       "displayName": "Marker Collection",
       "type": "list",
-      "enabled": { "markerType": "multiple"}
+      "enabled": { "markerType": "multiple" }
     }
   ],
   "childComponents": [
     {
       "name": "markers",
       "displayName": "Markers",
-      "enabled": { "markerType": "simple"},
+      "enabled": { "markerType": "simple" },
       "props": [
         {
           "name": "markerAddress",
           "displayName": "Marker Address",
           "type": "text"
+        },
+        {
+          "name": "markerSource",
+          "displayName": "Marker Image",
+          "type": "text",
+          "default": "default",
+          "control": {
+            "type": "menu",
+            "options": [
+              { "label": "Default", "value": "default" },
+              { "label": "Custom", "value": "custom" }
+            ]
+          }
+        },
+        {
+          "name": "markerImage",
+          "displayName": "Marker Image",
+          "type": "image",
+          "enabled": { "markerSource": "custom" }
         },
         {
           "name": "onPress",
@@ -55,12 +74,31 @@
       "displayName": "Markers",
       "role": "listItem",
       "reference": "markerCollection",
-      "enabled": { "markerType": "multiple"},
+      "enabled": { "markerType": "multiple" },
       "props": [
         {
           "name": "markerAddress",
           "displayName": "Marker Address",
           "type": "text"
+        },
+        {
+          "name": "markerSource",
+          "displayName": "Marker Source",
+          "type": "text",
+          "default": "default",
+          "control": {
+            "type": "menu",
+            "options": [
+              { "label": "Default", "value": "default" },
+              { "label": "Custom", "value": "custom" }
+            ]
+          }
+        },
+        {
+          "name": "listMarkerImage",
+          "displayName": "Marker Image",
+          "type": "image",
+          "enabled": { "markerSource": "custom" }
         },
         {
           "name": "onPress",

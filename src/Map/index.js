@@ -152,7 +152,7 @@ export default class Map extends Component {
       markerType,
       editor,
       markerCollection,
-      markers: { onPress },
+      markers: { onPress, markerImage, markerSource },
     } = this.props
 
     let {
@@ -207,7 +207,9 @@ export default class Map extends Component {
             addresses,
             currentLocation,
             onPress,
-            markerCollection
+            markerCollection,
+            markerImage,
+            markerSource
           )}
       </View>
     )
