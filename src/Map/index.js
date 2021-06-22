@@ -176,6 +176,14 @@ export default class Map extends Component {
       )
     }
 
+    if(loaded){
+      if(markerCollection.length !== this.state.addresses.length) {
+        this.setState({
+          loaded: false
+        })
+      }
+    }
+
     this.loadAddresses()
 
     if (!mapConfigLoaded) {

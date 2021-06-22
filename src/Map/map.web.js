@@ -79,8 +79,8 @@ export const getMap = (
         markerCollection &&
         markerCollection.map((marker, index) => (
           <View
-            lat={addresses.length > 0 ? addresses[index].location.lat : null}
-            lng={addresses.length > 0 ? addresses[index].location.lng : null}
+            lat={addresses.length > 0 ? addresses[index] && addresses[index].location.lat : null}
+            lng={addresses.length > 0 ? addresses[index] && addresses[index].location.lng : null}
             key={`marker ${index}`}
             onClick={marker.markers_list.onPress}
           >
