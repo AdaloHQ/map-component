@@ -91,9 +91,13 @@ export const getMap = (
           <Marker
             coordinate={{
               latitude:
-                addresses.length > 0 ? addresses[index] && addresses[index].location.lat : 0,
+                addresses.length > 0 && addresses[index]
+                  ? addresses[index].location.lat
+                  : 0,
               longitude:
-                addresses.length > 0 ? addresses[index] && addresses[index].location.lng : 0,
+                addresses.length > 0 && addresses[index]
+                  ? addresses[index].location.lng
+                  : 0,
             }}
             style={{ alignItems: 'center', justifyContent: 'center' }}
             key={`marker ${index}`}
