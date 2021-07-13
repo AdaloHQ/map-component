@@ -73,7 +73,7 @@ export default class Map extends Component {
     const {addresses, loaded} = state
     const {markerCollection} = props
     if(loaded){
-      if(markerCollection.length !== addresses.length) {
+      if(markerCollection && markerCollection.length !== addresses.length) {
         return {
           ...state,
           loaded: false
