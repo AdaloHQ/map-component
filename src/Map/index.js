@@ -71,8 +71,8 @@ export default class Map extends Component {
 
   static getDerivedStateFromProps(props, state) {
     const {addresses, loaded} = state
-    const {markerCollection} = props
-    if(loaded){
+    const {markerType, markerCollection} = props
+    if(loaded && markerType !== 'simple'){
       if(markerCollection && markerCollection.length !== addresses.length) {
         return {
           ...state,
