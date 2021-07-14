@@ -41,11 +41,49 @@ export const getMap = (
   const LATITUDE_DELTA = Math.exp(Math.log(360) - (zoom + 1) * Math.LN2)
   const LONGITUDE_DELTA = LATITUDE_DELTA * (width / height)
 
+  let filteredMarkers = []
+
+  if (isSimple) {
+    filteredMarkers.push({
+      //might need coordinates : longitude:
+      lat: addresses.length > 0 ? addresses[0].location.lat : null,
+      lng: addresses.length > 0 ? addresses[0].location.lng : null,
+      style: { alignItems: 'center', justifyContent: 'center' },
+      image:
+        markerImage && markerSource === 'custom' ? markerImage : defaultMarker,
+      onPress,
+    })
+  } else {
+    filteredMarkers = markerCollection.map((marker, index) => {
+      return {
+        lat:
+          addresses.length > 0 && addresses[index]
+            ? addresses[index].location.lat
+            : null,
+        lng:
+          addresses.length > 0 && addresses[index]
+            ? addresses[index].location.lng
+            : null,
+        style: { alignItems: 'center', justifyContent: 'center' },
+        image:
+          marker.markers_list.listMarkerImage &&
+          marker.markers_list.markerSource === 'custom'
+            ? marker.markers_list.listMarkerImage
+            : defaultMarker,
+        onPress: marker.markers_list.onPress,
+        key: `marker ${index}`,
+      }
+    })
+  }
+
+  filteredMarkers = filteredMarkers.filter((marker) => marker.lat)
+
   const viewCenter =
-    addresses.length > 0
-      ? { lat: addresses[0].location.lat, lng: addresses[0].location.lng }
+    filteredMarkers.length > 0
+      ? { lat: filteredMarkers[0].lat, lng: filteredMarkers[0].lng }
       : defaultCenter
   let mapRef = null
+
   return (
     <MapView
       style={styles.container}
@@ -66,52 +104,15 @@ export const getMap = (
         }
       }}
     >
-      {isSimple ? (
-        <Marker
-          coordinate={{
-            latitude: addresses.length > 0 ? addresses[0].location.lat : 0,
-            longitude: addresses.length > 0 ? addresses[0].location.lng : 0,
-          }}
-          style={{ alignItems: 'center', justifyContent: 'center' }}
-          onPress={onPress}
-        >
+      {filteredMarkers.map((marker) => (
+        <View lat={marker.lat} lng={marker.lng} onClick={marker.onPress}>
           <Image
             resizeMode="contain"
-            source={
-              markerImage && markerSource === 'custom'
-                ? markerImage
-                : defaultMarker
-            }
-            style={styles.markerImage}
+            source={marker.image}
+            style={[styles.markerImage, additionalStyles.markerImage]}
           />
-        </Marker>
-      ) : (
-        markerCollection &&
-        markerCollection.map((marker, index) => (
-          <Marker
-            coordinate={{
-              latitude:
-                addresses.length > 0 ? addresses[index].location.lat : 0,
-              longitude:
-                addresses.length > 0 ? addresses[index].location.lng : 0,
-            }}
-            style={{ alignItems: 'center', justifyContent: 'center' }}
-            key={`marker ${index}`}
-            onPress={marker.markers_list.onPress}
-          >
-            <Image
-              resizeMode="contain"
-              source={
-                marker.markers_list.listMarkerImage &&
-                marker.markers_list.markerSource === 'custom'
-                  ? marker.markers_list.listMarkerImage
-                  : defaultMarker
-              }
-              style={styles.markerImage}
-            />
-          </Marker>
-        ))
-      )}
+        </View>
+      ))}
     </MapView>
   )
 }
