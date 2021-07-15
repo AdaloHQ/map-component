@@ -48,7 +48,7 @@ export default class Map extends Component {
   state = {
     apiKey: null,
     markerAddress: null,
-    addresses: null,
+    addresses: [],
     markerImage: null,
     onPress: null,
     mapStyle: null,
@@ -67,6 +67,20 @@ export default class Map extends Component {
       this.isBrowser = typeof document !== 'undefined'
       this.fetchMapConfiguration()
     }
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    const {addresses, loaded} = state
+    const {markerType, markerCollection} = props
+    if(loaded && markerType !== 'simple'){
+      if(markerCollection && markerCollection.length !== addresses.length) {
+        return {
+          ...state,
+          loaded: false
+        }
+      }
+    }
+    return null
   }
 
   fetchMapConfiguration() {
@@ -125,7 +139,7 @@ export default class Map extends Component {
         ? markerCollection.map((m) => m.markers_list.markerAddress)
         : []
 
-    if (addr.length > 0 && !loaded) {
+    if (!loaded) {
       let result = await axios.post(geocodeURL, {
         addresses: addr,
         key: apiKey,
