@@ -7,6 +7,7 @@ import hybrid from './assets/hybrid.jpg'
 import roadmap from './assets/roadmap.jpg'
 import satellite from './assets/satellite.jpg'
 import terrain from './assets/terrain.jpg'
+import defaultMarker from './assets/marker.png'
 
 const stylesStatus = StyleSheet.create({
   wrapper: {
@@ -48,7 +49,7 @@ export default class Map extends Component {
   state = {
     apiKey: null,
     markerAddress: null,
-    addresses: null,
+    addresses: [],
     markerImage: null,
     onPress: null,
     mapStyle: null,
@@ -67,6 +68,20 @@ export default class Map extends Component {
       this.isBrowser = typeof document !== 'undefined'
       this.fetchMapConfiguration()
     }
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    const { addresses, loaded } = state
+    const { markerType, markerCollection } = props
+    if (loaded && markerType !== 'simple') {
+      if (markerCollection && markerCollection.length !== addresses.length) {
+        return {
+          ...state,
+          loaded: false,
+        }
+      }
+    }
+    return null
   }
 
   fetchMapConfiguration() {
@@ -127,7 +142,7 @@ export default class Map extends Component {
           })
         : []
 
-    if (addr.length > 0 && !loaded) {
+    if (!loaded) {
       let result = await axios.post(geocodeURL, {
         addresses: addr,
         key: apiKey,
@@ -148,17 +163,54 @@ export default class Map extends Component {
     }
   }
 
+  getFilteredAddresses = () => {
+    const { addresses } = this.state
+
+    const { markerType, onPress, markerCollection, markerImage, markerSource } =
+      this.props
+
+    const isSimple = markerType === 'simple'
+    let filteredMarkers = []
+
+    if (isSimple) {
+      filteredMarkers.push({
+        lat: addresses.length > 0 ? addresses[0].location.lat : null,
+        lng: addresses.length > 0 ? addresses[0].location.lng : null,
+        image:
+          markerImage && markerSource === 'custom'
+            ? markerImage
+            : defaultMarker,
+        onPress,
+      })
+    } else {
+      filteredMarkers = markerCollection.map((marker, index) => {
+        return {
+          lat:
+            addresses.length > 0 && addresses[index]
+              ? addresses[index].location.lat
+              : null,
+          lng:
+            addresses.length > 0 && addresses[index]
+              ? addresses[index].location.lng
+              : null,
+          image:
+            marker.markers_list.listMarkerImage &&
+            marker.markers_list.markerSource === 'custom'
+              ? marker.markers_list.listMarkerImage
+              : defaultMarker,
+          onPress: marker.markers_list.onPress,
+          key: `marker ${index}`,
+        }
+      })
+    }
+
+    return filteredMarkers.filter((marker) => marker.lat)
+  }
+
   render() {
-    let {
-      apiKey,
-      markerType,
-      editor,
-      markerCollection,
-      markers: { onPress, markerImage, markerSource },
-    } = this.props
+    let { apiKey, editor } = this.props
 
     let {
-      addresses,
       mapStyle,
       customStyle,
       currentLocation,
@@ -166,6 +218,8 @@ export default class Map extends Component {
       mapConfigLoaded,
       loaded,
     } = this.state
+
+    const filteredMarkers = this.getFilteredAddresses()
 
     if (editor) {
       return (
@@ -200,19 +254,14 @@ export default class Map extends Component {
     return (
       <View style={{ width: '100%', height: '100%' }}>
         {loaded &&
-          getMap(
+          getMap({
             apiKey,
-            this.state.zoom,
+            zoom: this.state.zoom,
             options,
             styles,
-            markerType,
-            addresses,
             currentLocation,
-            onPress,
-            markerCollection,
-            markerImage,
-            markerSource
-          )}
+            filteredMarkers,
+          })}
       </View>
     )
   }

@@ -18,66 +18,22 @@ export const addNativeEvent = (apiKey) => {
   }
 }
 
-export const getMap = (
+export const getMap = ({
   apiKey,
   zoom,
   options,
   styles,
-  markerType,
-  addresses,
   currentLocation,
-  onPress,
-  markerCollection,
-  markerImage,
-  markerSource
-) => {
+  filteredMarkers,
+}) => {
   const mapType =
     options.mapTypeId === 'roadmap' ? 'standard' : options.mapTypeId
-  const isSimple = markerType === 'simple'
   const defaultCenter = {
     lat: 40.7831,
     lng: -73.9712,
   }
   const LATITUDE_DELTA = Math.exp(Math.log(360) - (zoom + 1) * Math.LN2)
   const LONGITUDE_DELTA = LATITUDE_DELTA * (width / height)
-
-  let filteredMarkers = []
-
-  if (isSimple) {
-    filteredMarkers.push({
-      //might need coordinates : longitude:
-      lat: addresses.length > 0 ? addresses[0].location.lat : null,
-      lng: addresses.length > 0 ? addresses[0].location.lng : null,
-      style: { alignItems: 'center', justifyContent: 'center' },
-      image:
-        markerImage && markerSource === 'custom' ? markerImage : defaultMarker,
-      onPress,
-    })
-  } else {
-    filteredMarkers = markerCollection.map((marker, index) => {
-      return {
-        lat:
-          addresses.length > 0 && addresses[index]
-            ? addresses[index].location.lat
-            : null,
-        lng:
-          addresses.length > 0 && addresses[index]
-            ? addresses[index].location.lng
-            : null,
-        style: { alignItems: 'center', justifyContent: 'center' },
-        image:
-          marker.markers_list.listMarkerImage &&
-          marker.markers_list.markerSource === 'custom'
-            ? marker.markers_list.listMarkerImage
-            : defaultMarker,
-        onPress: marker.markers_list.onPress,
-        key: `marker ${index}`,
-      }
-    })
-  }
-
-  filteredMarkers = filteredMarkers.filter((marker) => marker.lat)
-
   const viewCenter =
     filteredMarkers.length > 0
       ? { lat: filteredMarkers[0].lat, lng: filteredMarkers[0].lng }
@@ -99,19 +55,27 @@ export const getMap = (
       customMapStyle={options.styles ? options.styles : []}
       ref={(map) => (mapRef = map)}
       onMapReady={() => {
-        if (!isSimple && addresses.length > 1) {
+        if (filteredMarkers.length > 1) {
           mapRef.fitToElements(true)
         }
       }}
     >
       {filteredMarkers.map((marker) => (
-        <View lat={marker.lat} lng={marker.lng} onClick={marker.onPress}>
+        <Marker
+          coordinate={{
+            latitude: marker && marker.lat,
+            longitude: marker && marker.lng,
+          }}
+          style={{ alignItems: 'center', justifyContent: 'center' }}
+          key={`marker ${index}`}
+          onPress={marker.onPress}
+        >
           <Image
             resizeMode="contain"
-            source={marker.image}
-            style={[styles.markerImage, additionalStyles.markerImage]}
+            source={marker && marker.image}
+            style={styles.markerImage}
           />
-        </View>
+        </Marker>
       ))}
     </MapView>
   )

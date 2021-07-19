@@ -15,57 +15,18 @@ export const addNativeEvent = (apiKey) => {
   // Do nothing in case of web
 }
 
-export const getMap = (
+export const getMap = ({
   apiKey,
   zoom,
   options,
   styles,
-  markerType,
-  addresses,
   currentLocation,
-  onPress,
-  markerCollection,
-  markerImage,
-  markerSource
-) => {
-  const isSimple = markerType === 'simple'
+  filteredMarkers,
+}) => {
   const defaultCenter = {
     lat: 40.7831,
     lng: -73.9712,
   }
-
-  let filteredMarkers = []
-
-  if (isSimple) {
-    filteredMarkers.push({
-      lat: addresses.length > 0 ? addresses[0].location.lat : null,
-      lng: addresses.length > 0 ? addresses[0].location.lng : null,
-      image:
-        markerImage && markerSource === 'custom' ? markerImage : defaultMarker,
-      onPress,
-    })
-  } else {
-    filteredMarkers = markerCollection.map((marker, index) => {
-      return {
-        lat:
-          addresses.length > 0 && addresses[index]
-            ? addresses[index].location.lat
-            : null,
-        lng:
-          addresses.length > 0 && addresses[index]
-            ? addresses[index].location.lng
-            : null,
-        image:
-          marker.markers_list.listMarkerImage &&
-          marker.markers_list.markerSource === 'custom'
-            ? marker.markers_list.listMarkerImage
-            : defaultMarker,
-        onPress: marker.markers_list.onPress,
-      }
-    })
-  }
-
-  filteredMarkers = filteredMarkers.filter((marker) => marker.lat)
 
   const viewCenter =
     filteredMarkers.length > 0
@@ -79,7 +40,7 @@ export const getMap = (
       defaultZoom={zoom}
       options={options}
       onGoogleApiLoaded={({ map, maps }) => {
-        if (!isSimple && filteredMarkers.length > 1) {
+        if (filteredMarkers.length > 1) {
           const bounds = new google.maps.LatLngBounds()
           for (let i = 0; i < filteredMarkers.length; i++) {
             const marker = filteredMarkers[i]
