@@ -183,28 +183,45 @@ export default class Map extends Component {
         onPress,
       })
     } else {
-      filteredMarkers = markerCollection.map((marker, index) => {
-        return {
-          lat:
-            addresses.length > 0 && addresses[index]
-              ? addresses[index].location.lat
-              : null,
-          lng:
-            addresses.length > 0 && addresses[index]
-              ? addresses[index].location.lng
-              : null,
-          image:
-            marker.markers_list.listMarkerImage &&
-            marker.markers_list.markerSource === 'custom'
-              ? marker.markers_list.listMarkerImage
-              : defaultMarker,
-          onPress: marker.markers_list.onPress,
-          key: `marker ${index}`,
-        }
-      })
+      if (markerCollection) {
+        filteredMarkers = markerCollection.map((marker, index) => {
+          return {
+            lat:
+              addresses.length > 0 && addresses[index]
+                ? addresses[index].location.lat
+                : null,
+            lng:
+              addresses.length > 0 && addresses[index]
+                ? addresses[index].location.lng
+                : null,
+            image:
+              marker.markers_list.listMarkerImage &&
+              marker.markers_list.markerSource === 'custom'
+                ? marker.markers_list.listMarkerImage
+                : defaultMarker,
+            onPress: marker.markers_list.onPress,
+            key: `marker ${index}`,
+          }
+        })
+      }
     }
 
-    return filteredMarkers.filter((marker) => marker.lat)
+    //0 addresss passed through case
+    let filtered = filteredMarkers.filter((marker) => marker.lat)
+
+    console.log(filtered)
+
+    if (filtered) {
+      return filtered
+    } else {
+      return {
+        lat: 40.7831,
+        lng: -73.9712,
+        image: defaultMarker,
+        onPress: marker.markers_list.onPress,
+        key: `marker ${index}`,
+      }
+    }
   }
 
   render() {

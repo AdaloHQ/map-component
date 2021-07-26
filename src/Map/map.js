@@ -8,7 +8,6 @@ import {
   Dimensions,
 } from 'react-native'
 const { height, width } = Dimensions.get('window')
-import defaultMarker from './assets/marker.png'
 
 export const addNativeEvent = (apiKey) => {
   if (Platform.OS === 'ios') {
@@ -24,7 +23,7 @@ export const getMap = ({
   options,
   styles,
   currentLocation,
-  filteredMarkers,
+  filteredMarkers = [],
 }) => {
   const mapType =
     options.mapTypeId === 'roadmap' ? 'standard' : options.mapTypeId
