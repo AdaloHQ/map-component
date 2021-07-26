@@ -52,15 +52,16 @@ export const getMap = ({
         }
       }}
     >
-      {filteredMarkers.map((marker) => (
-        <View lat={marker.lat} lng={marker.lng} onClick={marker.onPress}>
-          <Image
-            resizeMode="contain"
-            source={marker.image}
-            style={[styles.markerImage, additionalStyles.markerImage]}
-          />
-        </View>
-      ))}
+      {filteredMarkers &&
+        filteredMarkers.map((marker) => (
+          <View lat={marker.lat} lng={marker.lng} onClick={marker.onPress}>
+            <Image
+              resizeMode="contain"
+              source={marker.image}
+              style={[styles.markerImage, additionalStyles.markerImage]}
+            />
+          </View>
+        ))}
     </GoogleMapReact>
   )
 }

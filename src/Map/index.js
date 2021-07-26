@@ -207,21 +207,21 @@ export default class Map extends Component {
     }
 
     //0 addresss passed through case
-    let filtered = filteredMarkers.filter((marker) => marker.lat)
+    return filteredMarkers.filter((marker) => marker.lat)
 
-    console.log(filtered)
+    // console.log(filtered)
 
-    if (filtered) {
-      return filtered
-    } else {
-      return {
-        lat: 40.7831,
-        lng: -73.9712,
-        image: defaultMarker,
-        onPress: marker.markers_list.onPress,
-        key: `marker ${index}`,
-      }
-    }
+    // if (filtered) {
+    //   return filtered
+    // } else {
+    //   return {
+    //     lat: 40.7831,
+    //     lng: -73.9712,
+    //     image: defaultMarker,
+    //     onPress: marker.markers_list.onPress,
+    //     key: `marker-1`,
+    //   }
+    // }
   }
 
   render() {

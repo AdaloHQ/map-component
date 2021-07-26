@@ -59,23 +59,24 @@ export const getMap = ({
         }
       }}
     >
-      {filteredMarkers.map((marker) => (
-        <Marker
-          coordinate={{
-            latitude: marker && marker.lat,
-            longitude: marker && marker.lng,
-          }}
-          style={{ alignItems: 'center', justifyContent: 'center' }}
-          key={`marker ${index}`}
-          onPress={marker.onPress}
-        >
-          <Image
-            resizeMode="contain"
-            source={marker && marker.image}
-            style={styles.markerImage}
-          />
-        </Marker>
-      ))}
+      {filteredMarkers &&
+        filteredMarkers.map((marker) => (
+          <Marker
+            coordinate={{
+              latitude: marker && marker.lat,
+              longitude: marker && marker.lng,
+            }}
+            style={{ alignItems: 'center', justifyContent: 'center' }}
+            key={`marker ${index}`}
+            onPress={marker.onPress}
+          >
+            <Image
+              resizeMode="contain"
+              source={marker && marker.image}
+              style={styles.markerImage}
+            />
+          </Marker>
+        ))}
     </MapView>
   )
 }
