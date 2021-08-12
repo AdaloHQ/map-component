@@ -169,6 +169,8 @@ export default class Map extends Component {
     const { markerType, onPress, markerCollection, markerImage, markerSource } =
       this.props
 
+    console.log('Markers', markerCollection)
+
     const isSimple = markerType === 'simple'
     let filteredMarkers = []
 
@@ -205,23 +207,7 @@ export default class Map extends Component {
         })
       }
     }
-
-    //0 addresss passed through case
     return filteredMarkers.filter((marker) => marker.lat)
-
-    // console.log(filtered)
-
-    // if (filtered) {
-    //   return filtered
-    // } else {
-    //   return {
-    //     lat: 40.7831,
-    //     lng: -73.9712,
-    //     image: defaultMarker,
-    //     onPress: marker.markers_list.onPress,
-    //     key: `marker-1`,
-    //   }
-    // }
   }
 
   render() {
@@ -237,6 +223,8 @@ export default class Map extends Component {
     } = this.state
 
     const filteredMarkers = this.getFilteredAddresses()
+
+    console.log('Filtered: ', filteredMarkers)
 
     if (editor) {
       return (
