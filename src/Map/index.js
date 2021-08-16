@@ -169,8 +169,6 @@ export default class Map extends Component {
     const { markerType, onPress, markerCollection, markerImage, markerSource } =
       this.props
 
-    console.log('Markers', markerCollection)
-
     const isSimple = markerType === 'simple'
     let filteredMarkers = []
 
@@ -223,8 +221,6 @@ export default class Map extends Component {
     } = this.state
 
     const filteredMarkers = this.getFilteredAddresses()
-
-    console.log('Filtered: ', filteredMarkers)
 
     if (editor) {
       return (

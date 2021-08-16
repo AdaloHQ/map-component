@@ -44,7 +44,6 @@ export const getMap = ({
           const bounds = new google.maps.LatLngBounds()
           for (let i = 0; i < filteredMarkers.length; i++) {
             const marker = filteredMarkers[i]
-            console.log('Marker', marker)
             const newPoint = new google.maps.LatLng(marker.lat, marker.lng)
             bounds.extend(newPoint)
           }
