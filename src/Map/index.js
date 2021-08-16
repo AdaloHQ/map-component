@@ -137,9 +137,7 @@ export default class Map extends Component {
           ? [markerAddress]
           : []
         : markerCollection
-        ? markerCollection.map((m) => {
-            return m.markers_list.markerAddress
-          })
+        ? markerCollection.map((m) => m.markers_list.markerAddress)
         : []
 
     if (!loaded) {

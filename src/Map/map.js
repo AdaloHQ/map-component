@@ -34,7 +34,7 @@ export const getMap = ({
   const LATITUDE_DELTA = Math.exp(Math.log(360) - (zoom + 1) * Math.LN2)
   const LONGITUDE_DELTA = LATITUDE_DELTA * (width / height)
   const viewCenter =
-    filteredMarkers.length > 0
+    filteredMarkers.length > 0 && filteredMarkers[0]
       ? { lat: filteredMarkers[0].lat, lng: filteredMarkers[0].lng }
       : defaultCenter
   let mapRef = null

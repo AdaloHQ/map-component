@@ -29,7 +29,7 @@ export const getMap = ({
   }
 
   const viewCenter =
-    filteredMarkers.length > 0
+    filteredMarkers.length > 0 && filteredMarkers[0]
       ? { lat: filteredMarkers[0].lat, lng: filteredMarkers[0].lng }
       : defaultCenter
 
