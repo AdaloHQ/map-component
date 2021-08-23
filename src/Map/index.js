@@ -164,8 +164,11 @@ export default class Map extends Component {
   getFilteredAddresses = () => {
     const { addresses } = this.state
 
-    const { markerType, onPress, markerCollection, markerImage, markerSource } =
-      this.props
+    const {
+      markerType,
+      markerCollection,
+      markers: { markerImage, markerSource, onPress },
+    } = this.props
 
     const isSimple = markerType === 'simple'
     let filteredMarkers = []
