@@ -250,7 +250,10 @@ export default class Map extends Component {
     }
 
     if (customStyle) {
-      options.styles = JSON.parse(customStyle)
+      try {
+        options.styles = JSON.parse(customStyle)
+      }
+      catch (e) {}
     }
 
     return (
