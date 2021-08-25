@@ -167,7 +167,7 @@ export default class Map extends Component {
     const {
       markerType,
       markerCollection,
-      markers: { markerImage, markerSource, onPress },
+      markers: { markerSource, markerImage, onPress },
     } = this.props
 
     const isSimple = markerType === 'simple'

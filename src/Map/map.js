@@ -60,7 +60,7 @@ export const getMap = ({
       }}
     >
       {filteredMarkers &&
-        filteredMarkers.map((marker) => (
+        filteredMarkers.map((marker, index) => (
           <Marker
             coordinate={{
               latitude: marker && marker.lat,
