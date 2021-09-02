@@ -10,7 +10,7 @@
       "displayName": "Google Maps API Key",
       "type": "text",
       "global": true,
-      "helpText": "Get your API Key [here](https://help.adalo.com/component-basics/maps)"
+      "helpText": "Get your API Key [here](https://help.adalo.com/component-basics/marketplace-components/maps#1-setup-your-google-api-key)"
     },
     {
       "name": "markerType",
