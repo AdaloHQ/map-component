@@ -132,7 +132,7 @@
           "type": "text",
           "placeholder": "Paste JSON...",
           "disableDynamicValues": true,
-          "helpText": "Learn more about customizing your map [here](https://help.adalo.com/component-basics/maps#customizing-the-maps-with-with-json)"
+          "helpText": "Learn more about customizing your map [here](https://help.adalo.com/component-basics/marketplace-components/maps#5-customize-your-map-style)"
         },
         {
           "name": "currentLocation",
