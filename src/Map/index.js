@@ -7,6 +7,7 @@ import hybrid from './assets/hybrid.jpg'
 import roadmap from './assets/roadmap.jpg'
 import satellite from './assets/satellite.jpg'
 import terrain from './assets/terrain.jpg'
+import defaultMarker from './assets/marker.png'
 
 const stylesStatus = StyleSheet.create({
   wrapper: {
@@ -70,13 +71,13 @@ export default class Map extends Component {
   }
 
   static getDerivedStateFromProps(props, state) {
-    const {addresses, loaded} = state
-    const {markerType, markerCollection} = props
-    if(loaded && markerType !== 'simple'){
-      if(markerCollection && markerCollection.length !== addresses.length) {
+    const { addresses, loaded } = state
+    const { markerType, markerCollection } = props
+    if (loaded && markerType !== 'simple') {
+      if (markerCollection && markerCollection.length !== addresses.length) {
         return {
           ...state,
-          loaded: false
+          loaded: false,
         }
       }
     }
@@ -160,17 +161,58 @@ export default class Map extends Component {
     }
   }
 
-  render() {
-    let {
-      apiKey,
+  getFilteredAddresses = () => {
+    const { addresses } = this.state
+
+    const {
       markerType,
-      editor,
       markerCollection,
-      markers: { onPress, markerImage, markerSource },
+      markers: { markerSource, markerImage, onPress },
     } = this.props
 
+    const isSimple = markerType === 'simple'
+    let filteredMarkers = []
+
+    if (isSimple) {
+      filteredMarkers.push({
+        lat: addresses.length > 0 ? addresses[0].location.lat : null,
+        lng: addresses.length > 0 ? addresses[0].location.lng : null,
+        image:
+          markerImage && markerSource === 'custom'
+            ? markerImage
+            : defaultMarker,
+        onPress,
+      })
+    } else {
+      if (markerCollection) {
+        filteredMarkers = markerCollection.map((marker, index) => {
+          return {
+            lat:
+              addresses.length > 0 && addresses[index]
+                ? addresses[index].location.lat
+                : null,
+            lng:
+              addresses.length > 0 && addresses[index]
+                ? addresses[index].location.lng
+                : null,
+            image:
+              marker.markers_list.listMarkerImage &&
+              marker.markers_list.markerSource === 'custom'
+                ? marker.markers_list.listMarkerImage
+                : defaultMarker,
+            onPress: marker.markers_list.onPress,
+            key: `marker ${index}`,
+          }
+        })
+      }
+    }
+    return filteredMarkers.filter((marker) => marker.lat)
+  }
+
+  render() {
+    let { apiKey, editor } = this.props
+
     let {
-      addresses,
       mapStyle,
       customStyle,
       currentLocation,
@@ -178,6 +220,8 @@ export default class Map extends Component {
       mapConfigLoaded,
       loaded,
     } = this.state
+
+    const filteredMarkers = this.getFilteredAddresses()
 
     if (editor) {
       return (
@@ -206,25 +250,23 @@ export default class Map extends Component {
     }
 
     if (customStyle) {
-      options.styles = JSON.parse(customStyle)
+      try {
+        options.styles = JSON.parse(customStyle)
+      }
+      catch (e) {}
     }
 
     return (
       <View style={{ width: '100%', height: '100%' }}>
         {loaded &&
-          getMap(
+          getMap({
             apiKey,
-            this.state.zoom,
+            zoom: this.state.zoom,
             options,
             styles,
-            markerType,
-            addresses,
             currentLocation,
-            onPress,
-            markerCollection,
-            markerImage,
-            markerSource
-          )}
+            filteredMarkers,
+          })}
       </View>
     )
   }
