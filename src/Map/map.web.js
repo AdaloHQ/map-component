@@ -52,8 +52,8 @@ export const getMap = ({
       }}
     >
       {filteredMarkers &&
-        filteredMarkers.map((marker) => (
-          <View lat={marker.lat} lng={marker.lng} onClick={marker.onPress}>
+        filteredMarkers.map((marker, index) => (
+          <View lat={marker.lat} lng={marker.lng} onClick={marker.onPress} key={`marker ${index}`}>
             <Image
               resizeMode="contain"
               source={marker.image}
