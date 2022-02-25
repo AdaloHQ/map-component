@@ -78,6 +78,8 @@ export default class Map extends Component {
     const { markerCollection, editor } = prevPops
     const { loaded } = this.state
 
+    // load the addresses here instead of componentDidMount
+    // because markerCollection is not immediately available
     if (markerCollection && !loaded && !editor) {
       this.loadAddresses(prevPops)
     }
