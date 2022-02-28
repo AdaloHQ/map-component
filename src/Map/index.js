@@ -81,7 +81,7 @@ export default class Map extends Component {
     // load the addresses here instead of componentDidMount
     // because markerCollection is not immediately available
     if (markerCollection && !loaded && !editor) {
-      this.loadAddresses(prevPops)
+      this.loadAddresses()
     }
   }
 
@@ -136,14 +136,14 @@ export default class Map extends Component {
     }
   }
 
-  async loadAddresses(prevPops) {
+  async loadAddresses() {
     const {
       apiKey,
       markerType,
       markerCollection,
       markers: { markerAddress },
       editor,
-    } = prevPops
+    } = this.props
     const { loaded } = this.state
 
     if (!markerCollection || loaded || editor) {
