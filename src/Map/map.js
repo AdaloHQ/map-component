@@ -60,14 +60,14 @@ export const getMap = ({
       }}
     >
       {filteredMarkers &&
-        filteredMarkers.map((marker, index) => (
+        filteredMarkers.map(marker => (
           <Marker
             coordinate={{
               latitude: marker && marker.lat,
               longitude: marker && marker.lng,
             }}
             style={{ alignItems: 'center', justifyContent: 'center' }}
-            key={`marker ${index}`}
+            key={`${marker.lat}-${marker.lng}`}
             onPress={marker.onPress}
           >
             <Image
