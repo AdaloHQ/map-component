@@ -1,6 +1,6 @@
 {
   "name": "@protonapp/map-component",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "Map Component for Adalo",
   "main": "index.js",
   "scripts": {

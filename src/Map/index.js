@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, View, Text, StyleSheet, Image } from 'react-native'
+import { ActivityIndicator, View, Text, StyleSheet } from 'react-native'
 import { getMap, addNativeEvent } from './map'
 import { markerWidth, markerHeight, geocodeURL } from './config'
 import axios from 'axios'
@@ -8,6 +8,10 @@ import roadmap from './assets/roadmap.jpg'
 import satellite from './assets/satellite.jpg'
 import terrain from './assets/terrain.jpg'
 import defaultMarker from './assets/marker.png'
+
+// Matches a comma-separated latitude/longitude coordinate pair: "47.1231231, 179.99999999"
+// https://stackoverflow.com/questions/3518504/regular-expression-for-matching-latitude-longitude-coordinates
+const COORD_REG_EX = /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/
 
 const stylesStatus = StyleSheet.create({
   wrapper: {
@@ -70,6 +74,19 @@ export default class Map extends Component {
     }
   }
 
+  async componentDidUpdate() {
+    const { markerCollection, editor, markers: { markerAddress } } = this.props
+    const { loaded } = this.state
+
+    const markersLoaded = markerCollection || markerAddress
+
+    // load the addresses here instead of componentDidMount
+    // because markerCollection is not immediately available
+    if (markersLoaded && !loaded && !editor) {
+      this.loadAddresses()
+    }
+  }
+
   static getDerivedStateFromProps(props, state) {
     const { addresses, loaded } = state
     const { markerType, markerCollection } = props
@@ -121,44 +138,61 @@ export default class Map extends Component {
     }
   }
 
-  loadAddresses = async () => {
-    let { loaded } = this.state
-
-    let {
+  async loadAddresses() {
+    const {
       apiKey,
       markerType,
       markerCollection,
       markers: { markerAddress },
     } = this.props
 
-    let addr =
+    const locations =
       markerType === 'simple'
         ? markerAddress
           ? [markerAddress]
           : []
         : markerCollection
-        ? markerCollection.map((m) => m.markers_list.markerAddress)
+        ? markerCollection.map(m => m.markers_list.markerAddress)
         : []
+    
+    const coordinates = []
+    const addresses = []
 
-    if (!loaded) {
-      let result = await axios.post(geocodeURL, {
-        addresses: addr,
-        key: apiKey,
-      })
+    for (let i = 0; i < locations.length; i++) {
+      const location = locations[i]
 
-      this.setState({
-        addresses: result.data,
-      })
+      if (COORD_REG_EX.test(location)) {
+        const [lat, lng] = location.split(',')
 
-      if (
-        markerType === 'simple' ||
-        (markerType !== 'simple' && markerCollection)
-      ) {
-        this.setState({
-          loaded: true,
+        // this matches the shape of the geocoded coordinates below
+        coordinates.push({
+          name: location,
+          location: {
+            lat: parseFloat(lat.trim(), 10),
+            lng: parseFloat(lng.trim(), 10),
+          },
+          index: i,
         })
+      } else {
+        addresses.push(location)
       }
     }
+
+    const { data: geocodedCoordinates } = await axios.post(geocodeURL, {
+      addresses,
+      key: apiKey,
+    })
+
+    for (const coordinate of coordinates) {
+      const { name, location, index } = coordinate
+
+      geocodedCoordinates.splice(index, 0, { name, location })
+    }
+
+    this.setState({
+      addresses: geocodedCoordinates,
+      loaded: true,
+    })
   }
 
   getFilteredAddresses = () => {
@@ -201,7 +235,6 @@ export default class Map extends Component {
                 ? marker.markers_list.listMarkerImage
                 : defaultMarker,
             onPress: marker.markers_list.onPress,
-            key: `marker ${index}`,
           }
         })
       }
@@ -233,8 +266,6 @@ export default class Map extends Component {
         </View>
       )
     }
-
-    this.loadAddresses()
 
     if (!mapConfigLoaded) {
       return <ActivityIndicator />

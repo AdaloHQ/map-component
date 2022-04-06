@@ -1,7 +1,5 @@
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import {
-  View,
-  Text,
   Image,
   NativeModules,
   Platform,
@@ -18,7 +16,6 @@ export const addNativeEvent = (apiKey) => {
 }
 
 export const getMap = ({
-  apiKey,
   zoom,
   options,
   styles,
@@ -60,14 +57,14 @@ export const getMap = ({
       }}
     >
       {filteredMarkers &&
-        filteredMarkers.map((marker, index) => (
+        filteredMarkers.map(marker => (
           <Marker
             coordinate={{
               latitude: marker && marker.lat,
               longitude: marker && marker.lng,
             }}
             style={{ alignItems: 'center', justifyContent: 'center' }}
-            key={`marker ${index}`}
+            key={`${marker.lat}-${marker.lng}`}
             onPress={marker.onPress}
           >
             <Image
