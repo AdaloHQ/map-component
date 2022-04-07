@@ -178,11 +178,18 @@ export default class Map extends Component {
       }
     }
 
-    const { data: geocodedCoordinates } = await axios.post(geocodeURL, {
+    const { data: geocodedLocations } = await axios.post(geocodeURL, {
       addresses,
       key: apiKey,
     })
 
+    const geocodedCoordinates = geocodedLocations.map(location => ({
+      name: location.name,
+      location: location.address ? location.address.geometry.location : { lat: null, lng: null },
+    }))
+
+    // we need to preserve the original order of string addresses/coordinates
+    // because getFilteredAddresses relies on indexes
     for (const coordinate of coordinates) {
       const { name, location, index } = coordinate
 
