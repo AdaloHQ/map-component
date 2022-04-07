@@ -1,7 +1,6 @@
 import GoogleMapReact from 'google-map-react'
-import { View, Text, Image, StyleSheet } from 'react-native'
+import { View, Image, StyleSheet } from 'react-native'
 import { markerWidth, markerHeight } from './config'
-import defaultMarker from './assets/marker.png'
 
 const additionalStyles = StyleSheet.create({
   markerImage: {
@@ -20,7 +19,6 @@ export const getMap = ({
   zoom,
   options,
   styles,
-  currentLocation,
   filteredMarkers,
 }) => {
   const defaultCenter = {
@@ -52,8 +50,8 @@ export const getMap = ({
       }}
     >
       {filteredMarkers &&
-        filteredMarkers.map((marker) => (
-          <View lat={marker.lat} lng={marker.lng} onClick={marker.onPress}>
+        filteredMarkers.map(marker => (
+          <View lat={marker.lat} lng={marker.lng} onClick={marker.onPress} key={`${marker.lat}-${marker.lng}`}>
             <Image
               resizeMode="contain"
               source={marker.image}
