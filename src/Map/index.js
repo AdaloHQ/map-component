@@ -11,7 +11,7 @@ import defaultMarker from './assets/marker.png'
 
 // Matches a comma-separated latitude/longitude coordinate pair: "47.1231231, 179.99999999"
 // https://stackoverflow.com/questions/3518504/regular-expression-for-matching-latitude-longitude-coordinates
-const COORD_REG_EX = /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/
+const COORD_REG_EX = /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/
 
 const stylesStatus = StyleSheet.create({
   wrapper: {
@@ -161,7 +161,7 @@ export default class Map extends Component {
     for (let i = 0; i < locations.length; i++) {
       const location = locations[i]
 
-      if (COORD_REG_EX.test(location)) {
+      if (COORD_REG_EX.test(location.replace(/\s/g, ''))) {
         const [lat, lng] = location.split(',')
 
         // this matches the shape of the geocoded coordinates below
