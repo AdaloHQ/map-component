@@ -63,49 +63,47 @@ export default class Map extends Component {
     zoom: 13,
     markerType: null,
     mapConfigLoaded: false,
-    loaded: false,
+    isLoaded: false,
+    isLoading: false,
   }
-  isBrowser = true
 
   componentDidMount() {
-    if (!this.props.editor) {
-      this.isBrowser = typeof document !== 'undefined'
-      this.fetchMapConfiguration()
+    const { editor } = this.props
+
+    if (!editor) {
+      this.fetchMapConfiguration() 
     }
   }
 
   async componentDidUpdate() {
-    const { markerCollection, editor, markers: { markerAddress } } = this.props
-    const { loaded } = this.state
+    const { markerType, markerCollection, editor, markers: { markerAddress } } = this.props
+    const { isLoaded, addresses, isLoading } = this.state
 
-    const markersLoaded = markerCollection || markerAddress
+    if (editor || isLoading) {
+      return
+    }
+    
+    // check for new data after the map has loaded
+    if (isLoaded) {
+      const shouldUnload =
+        (markerType === 'simple' && markerAddress && !addresses.length) ||
+        (markerType === 'multiple' && markerCollection && markerCollection.length !== addresses.length)
 
-    // load the addresses here instead of componentDidMount
-    // because markerCollection is not immediately available
-    if (markersLoaded && !loaded && !editor) {
+      // unloads the map if the data it has (addresses) does not contain the data
+      // it receives (markerAddress for single or markerCollection for multiple)
+      if (shouldUnload) {
+        this.setState({ isLoaded: false })
+      }
+    } else {
       this.loadAddresses()
     }
-  }
-
-  static getDerivedStateFromProps(props, state) {
-    const { addresses, loaded } = state
-    const { markerType, markerCollection } = props
-    if (loaded && markerType !== 'simple') {
-      if (markerCollection && markerCollection.length !== addresses.length) {
-        return {
-          ...state,
-          loaded: false,
-        }
-      }
-    }
-    return null
   }
 
   fetchMapConfiguration() {
     const {
       apiKey,
       markerType,
-      markers: { markerAddress, markerImage, onPress },
+      markers: { markerAddress, onPress },
       style: { mapStyle, customStyle, currentLocation },
     } = this.props
 
@@ -145,6 +143,10 @@ export default class Map extends Component {
       markerCollection,
       markers: { markerAddress },
     } = this.props
+      // prevents unnecessary state updates in didComponentUpdate
+      this.setState({
+        isLoading: true
+      })
 
     const locations =
       markerType === 'simple'
@@ -198,7 +200,8 @@ export default class Map extends Component {
 
     this.setState({
       addresses: geocodedCoordinates,
-      loaded: true,
+      isLoaded: true,
+      isLoading: false,
     })
   }
 
@@ -258,7 +261,7 @@ export default class Map extends Component {
       currentLocation,
       errorMessage,
       mapConfigLoaded,
-      loaded,
+      isLoaded,
     } = this.state
 
     const filteredMarkers = this.getFilteredAddresses()
@@ -296,7 +299,7 @@ export default class Map extends Component {
 
     return (
       <View style={{ width: '100%', height: '100%' }}>
-        {loaded &&
+        {isLoaded &&
           getMap({
             apiKey,
             zoom: this.state.zoom,
