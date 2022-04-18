@@ -75,28 +75,30 @@ export default class Map extends Component {
     }
   }
 
-  async componentDidUpdate() {
-    const { markerType, markerCollection, editor, markers: { markerAddress } } = this.props
-    const { isLoaded, addresses, isLoading } = this.state
+  componentDidUpdate() {
+    const { editor } = this.props
+    const { isLoaded, isLoading } = this.state
 
     if (editor || isLoading) {
       return
     }
-    
-    // check for new data after the map has loaded
-    if (isLoaded) {
-      const shouldUnload =
-        (markerType === 'simple' && markerAddress && !addresses.length) ||
-        (markerType === 'multiple' && markerCollection && markerCollection.length !== addresses.length)
 
-      // unloads the map if the data it has (addresses) does not contain the data
-      // it receives (markerAddress for single or markerCollection for multiple)
-      if (shouldUnload) {
-        this.setState({ isLoaded: false })
-      }
+    if (isLoaded && this.mapShouldReload()) {
+      this.setState({ isLoaded: false })
     } else {
       this.loadAddresses()
     }
+  }
+
+  mapShouldReload() {
+    const { markerType, markerCollection, markers: { markerAddress } } = this.props
+    const { addresses } = this.state
+
+    if (markerType === 'simple') {
+      return addresses.length ? markerAddress !== addresses[0].name : markerAddress
+    }
+
+    return markerCollection && markerCollection.length !== addresses.length
   }
 
   fetchMapConfiguration() {
