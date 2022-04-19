@@ -85,7 +85,9 @@ export default class Map extends Component {
 
     if (isLoaded && this.mapShouldReload()) {
       this.setState({ isLoaded: false })
-    } else {
+    }
+    
+    if (!isLoaded) {
       this.loadAddresses()
     }
   }
