@@ -37,7 +37,7 @@ export const getMap = ({
       defaultCenter={viewCenter}
       defaultZoom={zoom}
       options={options}
-      onGoogleApiLoaded={({ map, maps }) => {
+      onGoogleApiLoaded={({ map }) => {
         if (filteredMarkers.length > 1) {
           const bounds = new google.maps.LatLngBounds()
           for (let i = 0; i < filteredMarkers.length; i++) {
@@ -50,8 +50,8 @@ export const getMap = ({
       }}
     >
       {filteredMarkers &&
-        filteredMarkers.map(marker => (
-          <View lat={marker.lat} lng={marker.lng} onClick={marker.onPress} key={`${marker.lat}-${marker.lng}`}>
+        filteredMarkers.map((marker, index) => (
+          <View lat={marker.lat} lng={marker.lng} onClick={marker.onPress} key={`${index}-${marker.lat}-${marker.lng}`}>
             <Image
               resizeMode="contain"
               source={marker.image}
