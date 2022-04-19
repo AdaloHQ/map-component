@@ -128,8 +128,6 @@ export default class Map extends Component {
       markerCollection,
       markers: { markerAddress },
     } = this.props
-      console.log('LOAD ADDRESSES')
-
       // prevents unnecessary state updates in didComponentUpdate
       this.setState({
         isLoading: true
@@ -201,10 +199,9 @@ export default class Map extends Component {
       markers: { markerSource, markerImage, onPress },
     } = this.props
 
-    const isSimple = markerType === 'simple'
     let filteredMarkers = []
 
-    if (isSimple) {
+    if (markerType === 'simple') {
       filteredMarkers.push({
         lat: addresses.length > 0 ? addresses[0].location.lat : null,
         lng: addresses.length > 0 ? addresses[0].location.lng : null,
@@ -240,8 +237,14 @@ export default class Map extends Component {
   }
 
   render() {
-    const { apiKey, editor, style: { mapStyle, customStyle, currentLocation } } = this.props
+    const {
+      apiKey,
+      editor,
+      style: { mapStyle, customStyle, currentLocation }
+    } = this.props
+
     const { errorMessage, isLoaded } = this.state
+
     const filteredMarkers = this.getFilteredAddresses()
 
     if (editor) {
