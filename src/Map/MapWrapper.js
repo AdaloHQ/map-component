@@ -1,39 +1,22 @@
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
-import {
-  Image,
-  NativeModules,
-  Platform,
-  Dimensions,
-} from 'react-native'
+import { Image, Dimensions } from 'react-native'
+import { defaultZoom } from './config'
+
 const { height, width } = Dimensions.get('window')
 
-export const addNativeEvent = (apiKey) => {
-  if (Platform.OS === 'ios') {
-    var KeyModule = NativeModules.KeyModule
-    KeyModule.addEvent(apiKey)
-  } else {
-  }
-}
-
-export const getMap = ({
-  zoom,
+const MapWrapper = ({
   options,
   styles,
   currentLocation,
   filteredMarkers = [],
+  viewCenter,
 }) => {
   const mapType =
     options.mapTypeId === 'roadmap' ? 'standard' : options.mapTypeId
-  const defaultCenter = {
-    lat: 40.7831,
-    lng: -73.9712,
-  }
-  const LATITUDE_DELTA = Math.exp(Math.log(360) - (zoom + 1) * Math.LN2)
+
+  const LATITUDE_DELTA = Math.exp(Math.log(360) - (defaultZoom + 1) * Math.LN2)
   const LONGITUDE_DELTA = LATITUDE_DELTA * (width / height)
-  const viewCenter =
-    filteredMarkers.length > 0 && filteredMarkers[0]
-      ? { lat: filteredMarkers[0].lat, lng: filteredMarkers[0].lng }
-      : defaultCenter
+
   let mapRef = null
 
   return (
@@ -77,3 +60,5 @@ export const getMap = ({
     </MapView>
   )
 }
+
+export default MapWrapper
