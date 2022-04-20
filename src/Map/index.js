@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, View, Text, StyleSheet } from 'react-native'
-import { getMap, addNativeEvent } from './map'
+import { ActivityIndicator, View, Text, StyleSheet, Platform } from 'react-native'
+import MapWrapper from './MapWrapper'
 import { markerWidth, markerHeight, geocodeURL } from './config'
 import axios from 'axios'
 import hybrid from './assets/hybrid.jpg'
@@ -49,37 +49,48 @@ const placeholderImages = {
   terrain,
 }
 
+const defaultCenter = {
+  lat: 40.7831,
+  lng: -73.9712,
+}
+
+const StatusMessage = ({ message }) => (
+  <View style={stylesStatus.wrapper}>
+    <Text style={stylesStatus.text}>{message}</Text>
+  </View>
+)
 export default class Map extends Component {
   state = {
-    apiKey: null,
-    markerAddress: null,
     addresses: [],
-    markerImage: null,
-    onPress: null,
-    mapStyle: null,
-    customStyle: null,
-    currentLocation: false,
     errorMessage: null,
-    zoom: 13,
-    markerType: null,
-    mapConfigLoaded: false,
     isLoaded: false,
     isLoading: false,
   }
 
   componentDidMount() {
-    const { editor } = this.props
+    const { editor, apiKey } = this.props
 
-    if (!editor) {
-      this.fetchMapConfiguration() 
+    if (editor) {
+      return
+    }
+
+    if (!apiKey) {
+      return this.setState({
+        errorMessage: 'API Key is not set.....',
+      })
+    }
+
+    if (Platform.OS === 'ios') {
+      const KeyModule = NativeModules.KeyModule
+      KeyModule.addEvent(apiKey)
     }
   }
 
   componentDidUpdate() {
-    const { editor } = this.props
+    const { editor, apiKey } = this.props
     const { isLoaded, isLoading } = this.state
 
-    if (editor || isLoading) {
+    if (editor || isLoading || !apiKey) {
       return
     }
 
@@ -101,36 +112,6 @@ export default class Map extends Component {
     }
 
     return markerCollection && markerCollection.length !== addresses.length
-  }
-
-  fetchMapConfiguration() {
-    const {
-      apiKey,
-      markerType,
-      markers: { markerAddress, onPress },
-      style: { mapStyle, customStyle, currentLocation },
-    } = this.props
-
-    if (!apiKey) {
-      return this.setState({
-        errorMessage: 'API Key is not set.....',
-        mapConfigLoaded: true,
-      })
-    }
-
-    addNativeEvent(apiKey)
-
-    this.setState({
-      apiKey,
-      markerType,
-      markerAddress,
-      onPress,
-      mapStyle,
-      customStyle,
-      currentLocation,
-      errorMessage: null,
-      mapConfigLoaded: true,
-    })
   }
 
   getMapOptions(maps) {
@@ -218,10 +199,9 @@ export default class Map extends Component {
       markers: { markerSource, markerImage, onPress },
     } = this.props
 
-    const isSimple = markerType === 'simple'
     let filteredMarkers = []
 
-    if (isSimple) {
+    if (markerType === 'simple') {
       filteredMarkers.push({
         lat: addresses.length > 0 ? addresses[0].location.lat : null,
         lng: addresses.length > 0 ? addresses[0].location.lng : null,
@@ -257,16 +237,13 @@ export default class Map extends Component {
   }
 
   render() {
-    let { apiKey, editor } = this.props
+    const {
+      apiKey,
+      editor,
+      style: { mapStyle, customStyle, currentLocation }
+    } = this.props
 
-    let {
-      mapStyle,
-      customStyle,
-      currentLocation,
-      errorMessage,
-      mapConfigLoaded,
-      isLoaded,
-    } = this.state
+    const { errorMessage, isLoaded } = this.state
 
     const filteredMarkers = this.getFilteredAddresses()
 
@@ -274,22 +251,18 @@ export default class Map extends Component {
       return (
         <View style={{ width: '100%', height: '100%' }}>
           <img
-            src={placeholderImages[this.props.style.mapStyle]}
+            src={placeholderImages[mapStyle]}
             style={{ objectFit: 'cover', width: 'auto', height: '100%' }}
           />
         </View>
       )
     }
 
-    if (!mapConfigLoaded) {
-      return <ActivityIndicator />
-    }
-
     if (errorMessage) {
       return <StatusMessage message={errorMessage} />
     }
 
-    let options = {
+    const options = {
       fullscreenControl: false,
       mapTypeId: mapStyle,
     }
@@ -301,29 +274,23 @@ export default class Map extends Component {
       catch (e) {}
     }
 
+    const viewCenter =
+      filteredMarkers.length
+        ? { lat: filteredMarkers[0].lat, lng: filteredMarkers[0].lng }
+        : defaultCenter
+
     return (
       <View style={{ width: '100%', height: '100%' }}>
-        {isLoaded &&
-          getMap({
-            apiKey,
-            zoom: this.state.zoom,
-            options,
-            styles,
-            currentLocation,
-            filteredMarkers,
-          })}
-      </View>
-    )
-  }
-}
-
-export class StatusMessage extends Component {
-  render() {
-    let { message } = this.props
-
-    return (
-      <View style={stylesStatus.wrapper}>
-        <Text style={stylesStatus.text}>{message}</Text>
+        {isLoaded ? (
+          <MapWrapper
+            apiKey={apiKey}
+            options={options}
+            styles={styles}
+            currentLocation={currentLocation}
+            filteredMarkers={filteredMarkers}
+            viewCenter={viewCenter}
+          />
+        ) : <ActivityIndicator />}
       </View>
     )
   }
