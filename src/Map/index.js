@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, View, Text, StyleSheet, Platform } from 'react-native'
+import { ActivityIndicator, View, Text, StyleSheet, Platform, NativeModules } from 'react-native'
 import MapWrapper from './MapWrapper'
 import { markerWidth, markerHeight, geocodeURL } from './config'
 import axios from 'axios'
