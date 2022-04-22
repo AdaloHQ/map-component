@@ -83,7 +83,6 @@ export default class Map extends Component {
     if (Platform.OS === 'ios') {
       const KeyModule = NativeModules.KeyModule
       KeyModule.addEvent(apiKey)
-      console.log(apiKey)
     }
   }
 
