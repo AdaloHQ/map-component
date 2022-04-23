@@ -8,6 +8,7 @@ import roadmap from './assets/roadmap.jpg'
 import satellite from './assets/satellite.jpg'
 import terrain from './assets/terrain.jpg'
 import defaultMarker from './assets/marker.png'
+import userLocation from './assets/user.png'
 
 // Matches a comma-separated latitude/longitude coordinate pair: "47.1231231, 179.99999999"
 // https://stackoverflow.com/questions/3518504/regular-expression-for-matching-latitude-longitude-coordinates
@@ -65,10 +66,12 @@ export default class Map extends Component {
     errorMessage: null,
     isLoaded: false,
     isLoading: false,
+    currentDeviceLocation: null,
+    userAddress: [],
   }
 
   componentDidMount() {
-    const { editor, apiKey } = this.props
+    const { editor, apiKey, style: { currentLocation } } = this.props
 
     if (editor) {
       return
@@ -84,6 +87,14 @@ export default class Map extends Component {
       const KeyModule = NativeModules.KeyModule
       KeyModule.addEvent(apiKey)
     }
+
+    if (Platform.OS === 'web' && currentLocation) {
+      navigator.geolocation.getCurrentPosition((currentDeviceLocation) => {
+        this.setState({
+          currentDeviceLocation
+        })
+      });
+    }
   }
 
   componentDidUpdate() {
@@ -94,7 +105,7 @@ export default class Map extends Component {
       return
     }
 
-    if (isLoaded && this.mapShouldReload()) {
+    if (this.mapShouldReload()) {
       this.setState({ isLoaded: false })
     }
     
@@ -104,8 +115,16 @@ export default class Map extends Component {
   }
 
   mapShouldReload() {
-    const { markerType, markerCollection, markers: { markerAddress } } = this.props
-    const { addresses } = this.state
+    const { markerType, markerCollection, markers: { markerAddress }, style: { currentLocation } } = this.props
+    const { addresses, isLoaded, currentDeviceLocation, userAddress } = this.state
+
+    if (!isLoaded) {
+      return false
+    }
+
+    if (currentDeviceLocation) {
+      return !userAddress.length
+    }
 
     if (markerType === 'simple') {
       return addresses.length ? markerAddress !== addresses[0].name : markerAddress
@@ -128,10 +147,13 @@ export default class Map extends Component {
       markerCollection,
       markers: { markerAddress },
     } = this.props
-      // prevents unnecessary state updates in didComponentUpdate
-      this.setState({
-        isLoading: true
-      })
+
+    const { currentDeviceLocation } = this.state
+
+    // prevents unnecessary state updates in didComponentUpdate
+    this.setState({
+      isLoading: true
+    })
 
     const locations =
       markerType === 'simple'
@@ -144,6 +166,16 @@ export default class Map extends Component {
     
     const coordinates = []
     const addresses = []
+    const userAddress = []
+
+
+    if (currentDeviceLocation) {
+      userAddress.push({
+        lat: currentDeviceLocation.coords.latitude,
+        lng: currentDeviceLocation.coords.longitude,
+        image: userLocation,
+      })
+    }
 
     for (let i = 0; i < locations.length; i++) {
       const location = locations[i]
@@ -184,6 +216,7 @@ export default class Map extends Component {
     }
 
     this.setState({
+      userAddress: userAddress,
       addresses: geocodedCoordinates,
       isLoaded: true,
       isLoading: false,
@@ -191,7 +224,7 @@ export default class Map extends Component {
   }
 
   getFilteredAddresses = () => {
-    const { addresses } = this.state
+    const { addresses, userAddress } = this.state
 
     const {
       markerType,
@@ -233,6 +266,11 @@ export default class Map extends Component {
         })
       }
     }
+
+    if (userAddress.length) {
+      filteredMarkers.push(userAddress[0])
+    }
+
     return filteredMarkers.filter((marker) => marker.lat)
   }
 
@@ -242,7 +280,6 @@ export default class Map extends Component {
       editor,
       style: { mapStyle, customStyle, currentLocation }
     } = this.props
-
     const { errorMessage, isLoaded } = this.state
 
     const filteredMarkers = this.getFilteredAddresses()
