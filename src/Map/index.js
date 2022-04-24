@@ -94,7 +94,7 @@ export default class Map extends Component {
         this.setState({
           currentPosition
         })
-      });
+      })
     }
   }
 
