@@ -65,10 +65,10 @@ export default class Map extends Component {
     dataAddresses: [],
     isDataAddressesLoaded: false,
     isDataAddressesLoading: false,
-    userAddress: [],
-    isUserAddressLoaded: false,
+    userLocation: [],
+    isUserLocationLoaded: false,
     errorMessage: null,
-    currentDeviceLocation: null,
+    currentPosition: null,
   }
 
   componentDidMount() {
@@ -90,9 +90,9 @@ export default class Map extends Component {
     }
 
     if (Platform.OS === 'web' && currentLocation) {
-      navigator.geolocation.getCurrentPosition(currentDeviceLocation => {
+      navigator.geolocation.getCurrentPosition(currentPosition => {
         this.setState({
-          currentDeviceLocation
+          currentPosition
         })
       });
     }
@@ -100,13 +100,13 @@ export default class Map extends Component {
 
   componentDidUpdate() {
     const { editor, apiKey } = this.props
-    const { isDataAddressesLoaded, isDataAddressesLoading, isUserAddressLoaded } = this.state
+    const { isDataAddressesLoaded, isDataAddressesLoading, isUserLocationLoaded } = this.state
 
     if (editor || isDataAddressesLoading || !apiKey) {
       return
     }
 
-    /***** Manipulates map based on incoming data *****/
+    /***** ALL PLATFORMS - Manipulates map based on incoming data - ALL PLATFORMS *****/
     if (isDataAddressesLoaded && this.shouldUpdateDataAddresses()) {
       // "un-render" the map so that it can be re-rendered with new data
       this.setState({ isDataAddressesLoaded: false })
@@ -118,29 +118,41 @@ export default class Map extends Component {
     }
     /**************************************************/
 
-    /***** Manipulates map based on device location *****/
-    if (isUserAddressLoaded && this.shouldUpdatedUserAddress()) {
+    /***** WEB ONLY - Manipulates map based on device location - WEB ONLY *****/
+    if (isUserLocationLoaded && this.shouldUpdatedUserAddress()) {
       // "un-render" the map so that it can be re-rendered with the device location
-      this.setState({ isUserAddressLoaded: false })
+      this.setState({ isUserLocationLoaded: false })
     }
 
     // generate a single-object array with the device location data
-    if (!isUserAddressLoaded) {
+    if (!isUserLocationLoaded) {
       this.loadUserAddress()
     }
     /**************************************************/
   }
 
+  /**
+   * WEB ONLY
+   * Tells the component whether or not to reload the map based on if the browser's
+   * current position is in the final array of addresses that are given to the map
+   * @returns {boolean}
+   */
   shouldUpdatedUserAddress() {
-    const { currentDeviceLocation, userAddress } = this.state
+    const { currentPosition, userLocation } = this.state
 
-    if (currentDeviceLocation) {
-      return !userAddress.length
+    if (currentPosition) {
+      return !userLocation.length
     }
 
     return false
   }
 
+  /**
+   * ALL PLATFORMS
+   * Tells the component whether or not to reload the map based on if the data
+   * given to it matches the final array of addresses that are given to the map
+   * @returns {boolean}
+   */
   shouldUpdateDataAddresses() {
     const { markerType, markerCollection, markers: { markerAddress } } = this.props
     const { dataAddresses } = this.state
@@ -152,21 +164,33 @@ export default class Map extends Component {
     return markerCollection && markerCollection.length !== dataAddresses.length
   }
 
+  /**
+   * WEB ONLY
+   * Populates the user location array with an object the map needs to render the user's current location
+   */
   async loadUserAddress() {
-    const { currentDeviceLocation } = this.state
+    const { currentPosition } = this.state
 
-    const userAddress = []
+    const userLocation = []
 
-    if (currentDeviceLocation) {
-      userAddress.push(currentDeviceLocation)
+    if (currentPosition) {
+      userLocation.push({
+        lat: currentPosition.coords.latitude,
+        lng: currentPosition.coords.longitude,
+        image: userLocation,
+      })
     }
 
     this.setState({
-      userAddress: userAddress,
-      isUserAddressLoaded: true,
+      userLocation,
+      isUserLocationLoaded: true,
     })
   }
 
+  /**
+   * ALL PLATFORMS
+   * Geocodes location data
+   */
   async loadDataAddresses() {
     const {
       apiKey,
@@ -236,22 +260,11 @@ export default class Map extends Component {
     })
   }
 
-  getUserAddress = () => {
-    const { userAddress, currentDeviceLocation } = this.state
-
-    const result = []
-
-    if (userAddress.length) {
-      result.push({
-        lat: currentDeviceLocation.coords.latitude,
-        lng: currentDeviceLocation.coords.longitude,
-        image: userLocation,
-      })
-    }
-
-    return result
-  }
-
+  /**
+   * ALL PLATFORMS
+   * Returns an array of objects the map expects to be able to render markers
+   * @returns {Object[]}
+   */
   getDataAddresses = () => {
     const { dataAddresses } = this.state
 
@@ -304,7 +317,7 @@ export default class Map extends Component {
       editor,
       style: { mapStyle, customStyle, currentLocation }
     } = this.props
-    const { errorMessage, isDataAddressesLoaded, isUserAddressLoaded } = this.state
+    const { errorMessage, isDataAddressesLoaded, isUserLocationLoaded, userLocation } = this.state
 
     if (editor) {
       return (
@@ -319,13 +332,13 @@ export default class Map extends Component {
       return <StatusMessage message={errorMessage} />
     }
 
-    if (!isDataAddressesLoaded || !isUserAddressLoaded) {
+    if (!isDataAddressesLoaded || !isUserLocationLoaded) {
       return <ActivityIndicator />
     }
 
     const filteredMarkers = [
       ...this.getDataAddresses(),
-      ...this.getUserAddress(),
+      ...userLocation,
     ]
 
     const options = {
