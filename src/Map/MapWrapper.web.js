@@ -38,8 +38,8 @@ const MapWrapper = ({
       }}
     >
       {filteredMarkers &&
-        filteredMarkers.map((marker, index) => (
-          <View lat={marker.lat} lng={marker.lng} onClick={marker.onPress} key={`${index}-${marker.lat}-${marker.lng}`}>
+        filteredMarkers.map(marker => (
+          <View lat={marker.lat} lng={marker.lng} onClick={marker.onPress} key={marker.key}>
             <Image
               resizeMode="contain"
               source={marker.image}

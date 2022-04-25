@@ -178,6 +178,7 @@ export default class Map extends Component {
         lat: currentPosition.coords.latitude,
         lng: currentPosition.coords.longitude,
         image: userLocationImage,
+        key: 'user-location',
       })
     }
 
@@ -303,6 +304,7 @@ export default class Map extends Component {
         lng: simpleAddress.location.lng,
         image,
         onPress,
+        key: 'single-address',
       })
 
     } else if (markerCollection) {
@@ -315,6 +317,7 @@ export default class Map extends Component {
             ? marker.markers_list.listMarkerImage
             : defaultMarkerImage,
         onPress: marker.markers_list.onPress,
+        key: marker.id
       }))
     }
 
