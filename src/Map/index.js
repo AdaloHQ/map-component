@@ -7,7 +7,7 @@ import hybrid from './assets/hybrid.jpg'
 import roadmap from './assets/roadmap.jpg'
 import satellite from './assets/satellite.jpg'
 import terrain from './assets/terrain.jpg'
-import defaultMarker from './assets/marker.png'
+import defaultMarkerImage from './assets/marker.png'
 import userLocationImage from './assets/user.png'
 
 // Matches a comma-separated latitude/longitude coordinate pair: "47.1231231, 179.99999999"
@@ -283,7 +283,7 @@ export default class Map extends Component {
         image:
           markerImage && markerSource === 'custom'
             ? markerImage
-            : defaultMarker,
+            : defaultMarkerImage,
         onPress,
       })
     } else {
@@ -302,7 +302,7 @@ export default class Map extends Component {
               marker.markers_list.listMarkerImage &&
               marker.markers_list.markerSource === 'custom'
                 ? marker.markers_list.listMarkerImage
-                : defaultMarker,
+                : defaultMarkerImage,
             onPress: marker.markers_list.onPress,
           }
         })
