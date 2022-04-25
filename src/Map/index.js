@@ -33,10 +33,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-  image: {
-    width: '100%',
-    height: '100%',
-  },
   markerImage: {
     width: markerWidth,
     height: markerHeight,
@@ -289,17 +285,17 @@ export default class Map extends Component {
       markers: { markerSource, markerImage, onPress },
     } = this.props
 
-    if (!dataAddresses.length) {
-      return []
-    }
+    let result = []
 
-    let filteredMarkers = []
+    if (!dataAddresses.length) {
+      return result
+    }
 
     if (markerType === 'simple') {
       const [simpleAddress] = dataAddresses
       const image = markerImage && markerSource === 'custom' ? markerImage : defaultMarkerImage
 
-      filteredMarkers.push({
+      result.push({
         lat: simpleAddress.location.lat,
         lng: simpleAddress.location.lng,
         image,
@@ -308,7 +304,7 @@ export default class Map extends Component {
       })
 
     } else if (markerCollection) {
-      filteredMarkers = markerCollection.map((marker, index) => ({
+      result = markerCollection.map((marker, index) => ({
         lat: dataAddresses[index] ? dataAddresses[index].location.lat : null,
         lng: dataAddresses[index] ? dataAddresses[index].location.lng : null,
         image:
@@ -321,7 +317,7 @@ export default class Map extends Component {
       }))
     }
 
-    return filteredMarkers.filter((marker) => marker.lat)
+    return result.filter(marker => marker.lat & marker.lng)
   }
 
   render() {
