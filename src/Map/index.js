@@ -8,7 +8,7 @@ import roadmap from './assets/roadmap.jpg'
 import satellite from './assets/satellite.jpg'
 import terrain from './assets/terrain.jpg'
 import defaultMarker from './assets/marker.png'
-import userLocationMarker from './assets/user.png'
+import userLocationImage from './assets/user.png'
 
 // Matches a comma-separated latitude/longitude coordinate pair: "47.1231231, 179.99999999"
 // https://stackoverflow.com/questions/3518504/regular-expression-for-matching-latitude-longitude-coordinates
@@ -177,7 +177,7 @@ export default class Map extends Component {
       userLocation.push({
         lat: currentPosition.coords.latitude,
         lng: currentPosition.coords.longitude,
-        image: userLocationMarker,
+        image: userLocationImage,
       })
     }
 
