@@ -115,7 +115,7 @@ export default class Map extends Component {
     /**************************************************/
 
     /***** WEB ONLY - Manipulates map based on device location - WEB ONLY *****/
-    if (isUserLocationLoaded && this.shouldUpdatedUserAddress()) {
+    if (isUserLocationLoaded && this.shouldUpdateUserAddress()) {
       // "un-render" the map so that it can be re-rendered with the device location
       this.setState({ isUserLocationLoaded: false })
     }
@@ -133,7 +133,7 @@ export default class Map extends Component {
    * current position is in the final array of addresses that are given to the map
    * @returns {boolean}
    */
-  shouldUpdatedUserAddress() {
+  shouldUpdateUserAddress() {
     const { currentPosition, userLocation } = this.state
 
     if (currentPosition) {
@@ -257,7 +257,7 @@ export default class Map extends Component {
     }))
 
     // we need to preserve the original order of string addresses/coordinates
-    // because getFilteredAddresses relies on indexes
+    // because getDataAddresses relies on indexes
     for (const coordinate of coordinates) {
       const { name, location, index } = coordinate
 
