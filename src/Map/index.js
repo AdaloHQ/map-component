@@ -33,10 +33,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-  image: {
-    width: '100%',
-    height: '100%',
-  },
   markerImage: {
     width: markerWidth,
     height: markerHeight,
@@ -178,6 +174,7 @@ export default class Map extends Component {
         lat: currentPosition.coords.latitude,
         lng: currentPosition.coords.longitude,
         image: userLocationImage,
+        key: 'user-location',
       })
     }
 
@@ -198,19 +195,33 @@ export default class Map extends Component {
       markerCollection,
       markers: { markerAddress },
     } = this.props
+    let locations = []
+
+    if (markerType === 'simple') {
+      if (markerAddress) {
+        locations = [markerAddress]
+      }
+    } else {
+      if (markerCollection) {
+        locations = markerCollection.map(m => m.markers_list.markerAddress)
+      }
+    }
+
+    // if there are no locations there is nothing to geocode
+    if (!locations.length) {
+      this.setState({
+        dataAddresses: [],
+        isDataAddressesLoaded: true,
+      })
+
+      return
+    }
+
     // prevents unnecessary state updates in didComponentUpdate
+    // while addresses are being geocoded
     this.setState({
       isDataAddressesLoading: true
     })
-
-    const locations =
-      markerType === 'simple'
-        ? markerAddress
-          ? [markerAddress]
-          : []
-        : markerCollection
-        ? markerCollection.map(m => m.markers_list.markerAddress)
-        : []
     
     const coordinates = []
     const addresses = []
@@ -274,41 +285,39 @@ export default class Map extends Component {
       markers: { markerSource, markerImage, onPress },
     } = this.props
 
-    let filteredMarkers = []
+    let result = []
+
+    if (!dataAddresses.length) {
+      return result
+    }
 
     if (markerType === 'simple') {
-      filteredMarkers.push({
-        lat: dataAddresses.length > 0 ? dataAddresses[0].location.lat : null,
-        lng: dataAddresses.length > 0 ? dataAddresses[0].location.lng : null,
-        image:
-          markerImage && markerSource === 'custom'
-            ? markerImage
-            : defaultMarkerImage,
+      const [simpleAddress] = dataAddresses
+      const image = markerImage && markerSource === 'custom' ? markerImage : defaultMarkerImage
+
+      result.push({
+        lat: simpleAddress.location.lat,
+        lng: simpleAddress.location.lng,
+        image,
         onPress,
+        key: 'single-address',
       })
-    } else {
-      if (markerCollection) {
-        filteredMarkers = markerCollection.map((marker, index) => {
-          return {
-            lat:
-              dataAddresses.length > 0 && dataAddresses[index]
-                ? dataAddresses[index].location.lat
-                : null,
-            lng:
-              dataAddresses.length > 0 && dataAddresses[index]
-                ? dataAddresses[index].location.lng
-                : null,
-            image:
-              marker.markers_list.listMarkerImage &&
-              marker.markers_list.markerSource === 'custom'
-                ? marker.markers_list.listMarkerImage
-                : defaultMarkerImage,
-            onPress: marker.markers_list.onPress,
-          }
-        })
-      }
+
+    } else if (markerCollection) {
+      result = markerCollection.map((marker, index) => ({
+        lat: dataAddresses[index] ? dataAddresses[index].location.lat : null,
+        lng: dataAddresses[index] ? dataAddresses[index].location.lng : null,
+        image:
+          marker.markers_list.listMarkerImage &&
+          marker.markers_list.markerSource === 'custom'
+            ? marker.markers_list.listMarkerImage
+            : defaultMarkerImage,
+        onPress: marker.markers_list.onPress,
+        key: marker.id
+      }))
     }
-    return filteredMarkers.filter((marker) => marker.lat)
+
+    return result.filter(marker => marker.lat & marker.lng)
   }
 
   render() {

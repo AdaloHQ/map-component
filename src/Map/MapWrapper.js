@@ -31,7 +31,7 @@ const MapWrapper = ({
       }}
       showsUserLocation={currentLocation}
       mapType={mapType}
-      customMapStyle={options.styles ? options.styles : []}
+      customMapStyle={options.styles || []}
       ref={(map) => (mapRef = map)}
       onMapReady={() => {
         if (filteredMarkers.length > 1) {
@@ -40,14 +40,14 @@ const MapWrapper = ({
       }}
     >
       {filteredMarkers &&
-        filteredMarkers.map((marker, index) => (
+        filteredMarkers.map(marker => (
           <Marker
             coordinate={{
               latitude: marker && marker.lat,
               longitude: marker && marker.lng,
             }}
             style={{ alignItems: 'center', justifyContent: 'center' }}
-            key={`${index}-${marker.lat}-${marker.lng}`}
+            key={marker.key}
             onPress={marker.onPress}
           >
             <Image
