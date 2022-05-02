@@ -317,7 +317,7 @@ export default class Map extends Component {
       }))
     }
 
-    return result.filter(marker => marker.lat & marker.lng)
+    return result.filter(marker => marker.lat && marker.lng)
   }
 
   render() {
