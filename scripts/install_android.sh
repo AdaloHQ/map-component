@@ -27,7 +27,7 @@ cd android
 # ./build.gradle
 
 sed -i.bak '/targetSdkVersion/a\
-    supportLibVersion = "28.0.0"\
+    supportLibVersion = "29.0.0"\
     playServicesVersion = "17.0.0"\
     androidMapsUtilsVersion = "0.6.2"\
 ' ./build.gradle
