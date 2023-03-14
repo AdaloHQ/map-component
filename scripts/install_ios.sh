@@ -13,6 +13,8 @@ alias react-native="$(pwd)/node_modules/.bin/react-native"
 yarn add react-native-maps@0.26.1
 # react-native link react-native-maps
 
+./ios_patch_stripe.sh ..
+
 # Podfile
 cd ios
 
