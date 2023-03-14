@@ -14,7 +14,7 @@ yarn add react-native-maps@0.26.1
 # react-native link react-native-maps
 
 echo "Patching iOS Stripe components..."
-scripts/ios_patch_stripe.sh $project_path
+./ios_patch_stripe.sh $project_path
 echo "... patched."
 
 # Podfile
