@@ -6713,9 +6713,10 @@ react-modal@^3.6.1:
     react-lifecycles-compat "^3.0.0"
     warning "^3.0.0"
 
-react-native-maps@^0.26.1:
+react-native-maps@0.26.1:
   version "0.26.1"
   resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-0.26.1.tgz#6ec316259b38d259c8974448d894bd7a23101da4"
+  integrity sha512-p4VTB8YB5ZmOmDRCUpoHZkm05amZwhIo04AJMBbB9+JAR2PNNfpo0vceoWX0Mag4wnePkdzPomeWMplr/wimTg==
 
 react-native-material-design-styles@^0.2.6:
   version "0.2.7"
