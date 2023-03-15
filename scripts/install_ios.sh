@@ -13,6 +13,10 @@ alias react-native="$(pwd)/node_modules/.bin/react-native"
 yarn add react-native-maps@0.26.1
 # react-native link react-native-maps
 
+echo "Patching iOS Stripe components..."
+$project_path/node_modules/@protonapp/map-component/scripts/ios_patch_stripe.sh $project_path
+echo "... patched."
+
 # Podfile
 cd ios
 
