@@ -1,6 +1,6 @@
 {
   "name": "@protonapp/map-component",
-  "version": "0.5.12",
+  "version": "0.5.16",
   "description": "Map Component for Adalo",
   "main": "index.js",
   "scripts": {
@@ -15,18 +15,6 @@
   },
   "author": "Adalo",
   "license": "ISC",
-  "adalo": {
-    "logo": "./GoogleMaps-logo.png",
-    "displayName": "Map Component",
-    "components": [
-      {
-        "name": "Map",
-        "manifest": "./src/Map/manifest.json"
-      }
-    ],
-    "iosInstallScript": "scripts/install_ios.sh",
-    "androidInstallScript": "scripts/install_android.sh"
-  },
   "peerDependencies": {
     "react": ">=16",
     "react-dom": ">=16"

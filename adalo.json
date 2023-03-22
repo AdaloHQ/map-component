@@ -1,0 +1,14 @@
+{
+  "author": "Adalo",
+  "description": "Map Component for Adalo",
+  "logo": "./GoogleMaps-logo.png",
+  "displayName": "Map Component",
+  "components": [
+    {
+      "name": "Map",
+      "manifest": "./src/Map/manifest.json"
+    }
+  ],
+  "iosInstallScript": "scripts/install_ios.sh",
+  "androidInstallScript": "scripts/install_android.sh"
+}
