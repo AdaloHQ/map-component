@@ -1,17 +1,12 @@
 {
   "name": "@protonapp/map-component",
-  "version": "0.5.16",
+  "version": "0.5.24",
   "description": "Map Component for Adalo",
   "main": "index.js",
   "scripts": {
-    "build": "proton build",
-    "publish": "S3_BUCKET=proton-libraries proton publish",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook",
-    "copy": "rm -rf ../mobile-previewer/node_modules/@protonapp/map-component/src/ && cp -r src ../mobile-previewer/node_modules/@protonapp/map-component/src && cp -r index.js ../mobile-previewer/node_modules/@protonapp/map-component/index.js",
-    "copy2": "rm -rf ../../packager/builds/AdaloApp/node_modules/@protonapp/map-component/src/ && cp -r src ../../packager/builds/AdaloApp/node_modules/@protonapp/map-component/src && cp -r index.js ../../packager/builds/AdaloApp/node_modules/@protonapp/map-component/index.js",
-    "dev-local": "FOUNDRY_DEV_SERVER=http://localhost:3035 npx foundry dev",
-    "dev": "proton dev"
+    "start": "adalo dev",
+    "login": "adalo login",
+    "publish": "adalo publish"
   },
   "author": "Adalo",
   "license": "ISC",
@@ -20,32 +15,15 @@
     "react-dom": ">=16"
   },
   "devDependencies": {
-    "@adalo/cli": "^0.0.41",
-    "@babel/core": "^7.1.2",
-    "@babel/plugin-proposal-class-properties": "^7.1.0",
-    "@babel/preset-env": "^7.1.0",
-    "@babel/preset-react": "^7.0.0",
-    "@storybook/addon-actions": "^4.0.2",
-    "@storybook/addon-links": "^4.0.2",
-    "@storybook/addons": "^4.0.2",
-    "@storybook/react": "^4.0.2",
-    "babel-core": "^6.26.3",
-    "babel-loader": "^8.0.4",
-    "babel-runtime": "^6.26.0",
-    "css-loader": "^1.0.0",
-    "react": "^16.5.2",
-    "react-art": "^16.6.0",
-    "react-dom": "^16.5.2",
-    "react-native-web": "^0.9.5",
-    "regenerator-runtime": "^0.12.1",
-    "style-loader": "^0.23.1"
+    "@adalo/cli": "^0.0.57",
+    "react": "^16.13.1",
+    "react-art": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-native-web": "^0.9.5"
   },
   "dependencies": {
-    "@protonapp/react-native-material-ui": "^2.0.4",
     "axios": "^0.19.1",
-    "color": "^3.1.0",
     "google-map-react": "^1.1.5",
-    "react-native-maps": "^0.26.1",
-    "react-native-vector-icons": "^6.0.2"
+    "react-native-maps": "^0.26.1"
   }
 }
