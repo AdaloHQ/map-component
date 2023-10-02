@@ -5,8 +5,6 @@ set -x
 project_path=$(pwd)
 name=$PROJECT_NAME
 
-alias react-native="$(pwd)/node_modules/.bin/react-native"
-
 # Dependencies manually added for now
 
 yarn add react-native-maps@0.26.1
@@ -91,7 +89,7 @@ fi
 
 } || {
   # NEW REACT NATIVE
-  sed -i.bak '/@implementation AppDelegate/i\
+  sed -i.bak '/\/\/ MARKER_REACT_NATIVE_IOS_APP_DELEGATE_IMPORTS/i\
   #import <GoogleMaps/GoogleMaps.h>\
   #import <React/RCTLog.h>\
   \
@@ -126,7 +124,7 @@ fi
 
 } || {
   # NEW REACT NATIVE
-  sed -i.bak '/@implementation AppDelegate/a\
+  sed -i.bak '/\/\/ MARKER_REACT_NATIVE_IOS_APP_DELEGATE_START/i\
   - (void) receiveNotification:(NSNotification *) notification\
     {\
       if ([[notification name] isEqualToString:@"APIKeyNotification"]) {\
@@ -149,7 +147,7 @@ fi
 
 } || {
   # NEW REACT NATIVE  
-  sed -i.bak '/return \[super application:application didFinishLaunchingWithOptions:launchOptions\];/i\
+  sed -i.bak '/\/\/ MARKER_REACT_NATIVE_IOS_APP_DELEGATE_DID_FINISH_LAUNCHING_WITH_OPTIONS/i\
     [[NSNotificationCenter defaultCenter] addObserver:self\
                                             selector:@selector(receiveNotification:)\
                                                 name:@"APIKeyNotification"\
@@ -165,8 +163,6 @@ sed -i.bak '/@end/a\
 @interface KeyModule : NSObject <RCTBridgeModule>\
 @end\
 ' ./${name}/AppDelegate.h
-
-# Re-link react-native-maps
 
 cd ..
 
