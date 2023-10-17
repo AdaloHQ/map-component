@@ -33,11 +33,6 @@ const MapWrapper = ({
       mapType={mapType}
       customMapStyle={options.styles || []}
       ref={(map) => (mapRef = map)}
-      onMapReady={() => {
-        if (filteredMarkers.length > 1) {
-          mapRef.fitToElements(true)
-        }
-      }}
     >
       {filteredMarkers &&
         filteredMarkers.map(marker => (
