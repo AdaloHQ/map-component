@@ -30,6 +30,30 @@
       "displayName": "Marker Collection",
       "type": "list",
       "enabled": { "markerType": "multiple" }
+    },
+    {
+      "name":"overrideDefaultZoom",
+      "displayName": "Override default position and zoom",
+      "type": "boolean",
+      "default": false
+    },
+    {
+      "name": "mapZoom",
+      "displayName": "Zoom",
+      "type":"number",
+      "default": 15,
+      "control": {
+          "type": "slider",
+          "min": 1,
+          "max": 21 
+      },
+      "enabled": { "overrideDefaultZoom": true }
+    },
+    {
+      "name": "initialLocation", 
+      "displayName": "initial location",
+      "type": "text",
+      "enabled": { "overrideDefaultZoom": true }
     }
   ],
   "childComponents": [

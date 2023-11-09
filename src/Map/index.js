@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, View, Text, StyleSheet, Platform, NativeModules } from 'react-native'
+import { ActivityIndicator, View, Text, StyleSheet, Platform, NativeModules,Alert } from 'react-native'
 import MapWrapper from './MapWrapper'
 import { markerWidth, markerHeight, geocodeURL } from './config'
 import axios from 'axios'
@@ -13,6 +13,20 @@ import userLocationImage from './assets/user.png'
 // Matches a comma-separated latitude/longitude coordinate pair: "47.1231231, 179.99999999"
 // https://stackoverflow.com/questions/3518504/regular-expression-for-matching-latitude-longitude-coordinates
 const COORD_REG_EX = /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/
+
+const getPosition = (position) => {
+  if (!position ||  position === '' || !COORD_REG_EX.test(position.replace(/\s/g, ''))) {
+    return { isEmpty: true, ... defaultCenter };
+  }
+
+  const [lat, lng] = position.split(',');
+  // console.log(lat, lng);
+  return {
+    isEmpty: false,
+    lat: parseFloat(lat.trim(), 10),
+    lng: parseFloat(lng.trim(), 10),
+  }
+};
 
 const stylesStatus = StyleSheet.create({
   wrapper: {
@@ -92,6 +106,10 @@ export default class Map extends Component {
         })
       })
     }
+
+      const { initialLocation } = this.props
+      const position = getPosition(initialLocation);
+      this.setState({initialPosition: position});
   }
 
   componentDidUpdate() {
@@ -324,9 +342,12 @@ export default class Map extends Component {
     const {
       apiKey,
       editor,
-      style: { mapStyle, customStyle, currentLocation }
+      style: { mapStyle, customStyle, currentLocation },
+      mapZoom,
+      overrideDefaultZoom,
+      _height
     } = this.props
-    const { errorMessage, isDataAddressesLoaded, isUserLocationLoaded, userLocation } = this.state
+    const { errorMessage, isDataAddressesLoaded, isUserLocationLoaded, userLocation, initialPosition } = this.state
 
     if (editor) {
       return (
@@ -362,13 +383,21 @@ export default class Map extends Component {
       catch (e) {}
     }
 
-    const viewCenter =
-      filteredMarkers.length
-        ? { lat: filteredMarkers[0].lat, lng: filteredMarkers[0].lng }
+    const viewCenter = !overrideDefaultZoom || initialPosition.isEmpty ? 
+    (filteredMarkers.length
+      ? { lat: filteredMarkers[0].lat, lng: filteredMarkers[0].lng }
+      : defaultCenter)
+    :(
+      initialPosition
+    );
+/*
+    const viewCenter = 
+      filteredMarkers.length 
+        ? { lat: filteredMarkers[0].lat, lng: filteredMarkers[0].lng } 
         : defaultCenter
-
+*/
     return (
-      <View style={{ width: '100%', height: '100%' }}>
+      <View style={ [{ width: '100%', height: _height }, { "minHeight": 64 }]}>
         <MapWrapper
           apiKey={apiKey}
           options={options}
@@ -376,6 +405,8 @@ export default class Map extends Component {
           currentLocation={currentLocation}
           filteredMarkers={filteredMarkers}
           viewCenter={viewCenter}
+          overrideDefaultZoom = {overrideDefaultZoom}
+          initZoom = {mapZoom}
         />
       </View>
     )

@@ -16,14 +16,20 @@ const MapWrapper = ({
   styles,
   filteredMarkers = [],
   viewCenter,
+  initZoom,
+  overrideDefaultZoom
 }) => {
+
   return (
     <GoogleMapReact
       bootstrapURLKeys={{ key: apiKey }}
       defaultCenter={viewCenter}
-      defaultZoom={defaultZoom}
+      defaultZoom={ overrideDefaultZoom ? initZoom : defaultZoom}
       options={options}
+      yesIWantToUseGoogleMapApiInternals
       onGoogleApiLoaded={({ map }) => {
+        if (overrideDefaultZoom)  return;
+  
         if (filteredMarkers.length > 1) {
           const bounds = new google.maps.LatLngBounds()
 

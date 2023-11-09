@@ -1,4 +1,5 @@
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
+// import { useEffect } from 'react'
 import { Image, Dimensions } from 'react-native'
 import { defaultZoom } from './config'
 
@@ -10,11 +11,13 @@ const MapWrapper = ({
   currentLocation,
   filteredMarkers = [],
   viewCenter,
+  overrideDefaultZoom,
+  initZoom
 }) => {
   const mapType =
     options.mapTypeId === 'roadmap' ? 'standard' : options.mapTypeId
-
-  const LATITUDE_DELTA = Math.exp(Math.log(360) - (defaultZoom + 1) * Math.LN2)
+  const zoom = overrideDefaultZoom ? initZoom : defaultZoom + 1;
+  const LATITUDE_DELTA = Math.exp(Math.log(360) - (zoom) * Math.LN2)
   const LONGITUDE_DELTA = LATITUDE_DELTA * (width / height)
 
   let mapRef = null
@@ -34,6 +37,7 @@ const MapWrapper = ({
       customMapStyle={options.styles || []}
       ref={(map) => (mapRef = map)}
       onMapReady={() => {
+        if (overrideDefaultZoom) return;
         if (filteredMarkers.length > 1) {
           mapRef.fitToElements(true)
         }
