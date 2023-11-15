@@ -14,10 +14,23 @@ import userLocationImage from './assets/user.png'
 // https://stackoverflow.com/questions/3518504/regular-expression-for-matching-latitude-longitude-coordinates
 const COORD_REG_EX = /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/
 
-const getPosition = (position) => {
-  if (!position ||  position === '' || !COORD_REG_EX.test(position.replace(/\s/g, ''))) {
+const getPosition = async (position,apiKey) => {
+  if (!position ||  position === '') {
     return { isEmpty: true, ... defaultCenter };
+  } else if (!COORD_REG_EX.test(position.replace(/\s/g, ''))) {
+
+    const { data: geocodedLocations } = await axios.post(geocodeURL, {
+    addresses: [position],
+    key: apiKey,
+    })
+
+    const {lat, lng} = geocodedLocations[0].location;
+    return {
+    isEmpty: false,
+    lat,
+    lng
   }
+    }
 
   const [lat, lng] = position.split(',');
   // console.log(lat, lng);
@@ -107,15 +120,15 @@ export default class Map extends Component {
       })
     }
 
-      const { initialLocation } = this.props
-      const position = getPosition(initialLocation);
-      this.setState({initialPosition: position});
+    this.setState({ initialPosition: { isEmpty: true } }); 
+    this.loadDataInitialLocation()
+     
   }
-
+ ;
   componentDidUpdate() {
     const { editor, apiKey } = this.props
     const { isDataAddressesLoaded, isDataAddressesLoading, isUserLocationLoaded } = this.state
-
+    
     if (editor || isDataAddressesLoading || !apiKey) {
       return
     }
@@ -206,6 +219,12 @@ export default class Map extends Component {
    * ALL PLATFORMS
    * Geocodes location data
    */
+  async loadDataInitialLocation() {
+    const { initialLocation, apiKey } = this.props
+      const position = await getPosition(initialLocation, apiKey);
+      this.setState({ initialPosition: position });
+    }
+
   async loadDataAddresses() {
     const {
       apiKey,
