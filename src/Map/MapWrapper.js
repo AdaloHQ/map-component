@@ -1,5 +1,6 @@
+import { useRef } from 'react'
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
-import { Image, Dimensions } from 'react-native'
+import { Image, Dimensions, Platform } from 'react-native'
 import { defaultZoom } from './config'
 
 const { height, width } = Dimensions.get('window')
@@ -17,7 +18,7 @@ const MapWrapper = ({
   const LATITUDE_DELTA = Math.exp(Math.log(360) - (defaultZoom + 1) * Math.LN2)
   const LONGITUDE_DELTA = LATITUDE_DELTA * (width / height)
 
-  let mapRef = null
+  const mapRef = useRef(null)
 
   return (
     <MapView
@@ -32,10 +33,25 @@ const MapWrapper = ({
       showsUserLocation={currentLocation}
       mapType={mapType}
       customMapStyle={options.styles || []}
-      ref={(map) => (mapRef = map)}
+      ref={mapRef}
       onMapReady={() => {
+        if (!mapRef.current) {
+          return
+        }
+
         if (filteredMarkers.length > 1) {
-          mapRef.fitToElements(true)
+          if (Platform.OS === 'android') {
+            // This is a hack inspired by this issue:
+            // https://github.com/react-native-maps/react-native-maps/issues/4531
+            // It may be that future versions of react-native-maps will fix this issue
+            setTimeout(() => {
+              mapRef.current.fitToElements(true)
+            }, 50)
+            
+            return
+          }
+          
+          mapRef.current.fitToElements(true)
         }
       }}
     >
