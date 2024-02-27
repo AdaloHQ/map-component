@@ -2,10 +2,10 @@
 set -e
 set -x
 
-project_path=$(pwd)
-name=$PROJECT_NAME
-
+dir=$(dirname "${0}")
 key=$("${dir}/get_maps_api_key.js")
+
+name=$PROJECT_NAME
 
 cd ios
 
