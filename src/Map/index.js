@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, View, Text, StyleSheet, Platform, NativeModules } from 'react-native'
+import { ActivityIndicator, View, Text, StyleSheet, Platform } from 'react-native'
 import MapWrapper from './MapWrapper'
 import { markerWidth, markerHeight, geocodeURL } from './config'
 import axios from 'axios'
@@ -78,11 +78,6 @@ export default class Map extends Component {
       return this.setState({
         errorMessage: 'API Key is not set.....',
       })
-    }
-
-    if (Platform.OS === 'ios') {
-      const KeyModule = NativeModules.KeyModule
-      KeyModule.addEvent(apiKey)
     }
 
     if (Platform.OS === 'web' && currentLocation) {
