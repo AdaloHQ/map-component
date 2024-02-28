@@ -12,6 +12,16 @@ cd ios
 # Replace `platform :ios, min_ios_version_supported`` with `platform :ios, '13.4'`
 sed -i.bak "s/platform :ios, min_ios_version_supported/platform :ios, '13.4'/g" Podfile
 
+# Add `rn_maps_path = '../node_modules/react-native-maps'` above `config = use_native_modules!`
+sed -i.bak '/config = use_native_modules!/i\
+rn_maps_path = '"'"'../node_modules/react-native-maps'"'"'\
+' Podfile
+
+# Add `pod 'react-native-google-maps', :path => rn_maps_path` above `config = use_native_modules!`
+sed -i.bak '/config = use_native_modules!/i\
+pod '"'"'react-native-google-maps'"'"', :path => rn_maps_path\
+' Podfile
+
 # Add `#import <GoogleMaps/GoogleMaps.h>` BEFORE `// MARKER_REACT_NATIVE_IOS_APP_DELEGATE_IMPORTS`
 sed -i.bak '/\/\/ MARKER_REACT_NATIVE_IOS_APP_DELEGATE_IMPORTS/i\
 #import <GoogleMaps/GoogleMaps.h>\
