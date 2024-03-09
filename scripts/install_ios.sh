@@ -2,168 +2,37 @@
 set -e
 set -x
 
-project_path=$(pwd)
+dir=$(dirname "${0}")
+key=$("${dir}/get_maps_api_key.js")
+
 name=$PROJECT_NAME
 
-# Dependencies manually added for now
-
-yarn add react-native-maps@0.26.1
-
-# Podfile
 cd ios
 
-sed -i.bak '/use_native_modules/a\
-  pod "react-native-maps", path: "../node_modules/react-native-maps"\
-  pod "react-native-google-maps", path: "../node_modules/react-native-maps"  # Uncomment this line if you want to support GoogleMaps on iOS\
-  pod "GoogleMaps"  # Uncomment this line if you want to support GoogleMaps on iOS\
-  pod "Google-Maps-iOS-Utils" # Uncomment this line if you want to support GoogleMaps on iOS\
+# Replace `platform :ios, min_ios_version_supported`` with `platform :ios, '13.4'`
+sed -i.bak "s/platform :ios, min_ios_version_supported/platform :ios, '13.4'/g" Podfile
+
+# Add `rn_maps_path = '../node_modules/react-native-maps'` above `config = use_native_modules!`
+sed -i.bak '/config = use_native_modules!/i\
+rn_maps_path = '"'"'../node_modules/react-native-maps'"'"'\
 ' Podfile
 
-if grep -q post_install Podfile; then
-  echo "post_install already exists in Podfile"
+# Add `pod 'react-native-google-maps', :path => rn_maps_path` above `config = use_native_modules!`
+sed -i.bak '/config = use_native_modules!/i\
+pod '"'"'react-native-google-maps'"'"', :path => rn_maps_path\
+' Podfile
 
-  # add it after __apply_Xcode_12_5_M1_post_install_workaround(installer)
-  sed -i.bak '/__apply_Xcode_12_5_M1_post_install_workaround(installer)/a\
-  \
-  installer.pods_project.targets.each do |target|\
-    if target.name == "react-native-google-maps"\
-      target.build_configurations.each do |config|\
-        config.build_settings["CLANG_ENABLE_MODULES"] = "No"\
-      end\
-    end\
-    if target.name == "Google-Maps-iOS-Utils"\
-      target.build_configurations.each do |config|\
-        config.build_settings["IPHONEOS_DEPLOYMENT_TARGET"] = "12.4"\
-      end\
-    end\
-    if target.name == "React"\
-      target.remove_from_project\
-    end\
-  end\
-  ' Podfile
+# Add `#import <GoogleMaps/GoogleMaps.h>` BEFORE `// MARKER_REACT_NATIVE_IOS_APP_DELEGATE_IMPORTS`
+sed -i.bak '/\/\/ MARKER_REACT_NATIVE_IOS_APP_DELEGATE_IMPORTS/i\
+#import <GoogleMaps/GoogleMaps.h>\
+' ./${name}/AppDelegate.mm
 
-else
-  echo "post_install does not exist in Podfile"
+# Add `[GMSServices provideAPIKey:@"GEO_API_KEY"];` AFTER `self.initialProps = @{};`
+sed -i.bak '/self.initialProps = @{};/a\
+  [GMSServices provideAPIKey:@"GEO_API_KEY"];\
+' ./${name}/AppDelegate.mm
 
-cat <<EOF >> Podfile
-post_install do |installer|
-  installer.pods_project.targets.each do |target|
-    if target.name == 'react-native-google-maps'
-      target.build_configurations.each do |config|
-        config.build_settings['CLANG_ENABLE_MODULES'] = 'No'
-      end
-    end
-    if target.name == 'Google-Maps-iOS-Utils'
-      target.build_configurations.each do |config|
-        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '8.0'
-      end
-    end
-    if target.name == "React"
-      target.remove_from_project
-    end
-  end
-end
-EOF
-fi
-
-# Enabling Google Maps on iOS
-
-{ 
-  # OLD REACT NATIVE
-  sed -i.bak '/UserNotifications.h/a\
-  #import <GoogleMaps/GoogleMaps.h>\
-  #import <React/RCTLog.h>\
-  \
-  @implementation KeyModule\
-  \
-  RCT_EXPORT_MODULE();\
-  \
-  RCT_EXPORT_METHOD(addEvent:(NSString *)apiKey)\
-  {\
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"APIKeyNotification"\
-                                                      object:apiKey];\
-  }\
-  \
-  @end\
-  ' ./${name}/AppDelegate.m
-
-} || {
-  # NEW REACT NATIVE
-  sed -i.bak '/\/\/ MARKER_REACT_NATIVE_IOS_APP_DELEGATE_IMPORTS/i\
-  #import <GoogleMaps/GoogleMaps.h>\
-  #import <React/RCTLog.h>\
-  \
-  @implementation KeyModule\
-  \
-  RCT_EXPORT_MODULE();\
-  \
-  RCT_EXPORT_METHOD(addEvent:(NSString *)apiKey)\
-  {\
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"APIKeyNotification"\
-                                                      object:apiKey];\
-  }\
-  \
-  @end\
-  ' ./${name}/AppDelegate.mm
-
-
-}
-
-{
-  # OLD REACT NATIVE
-  sed -i.bak '/didFinishLaunchingWithOptions/i\
-  - (void) receiveNotification:(NSNotification *) notification\
-    {\
-      if ([[notification name] isEqualToString:@"APIKeyNotification"]) {\
-        NSString *apiKey = notification.object;\
-        NSLog(@"Here is Google map API Key - %@", apiKey);\
-        [GMSServices provideAPIKey:apiKey];\
-      }\
-    }\
-  ' ./${name}/AppDelegate.m
-
-} || {
-  # NEW REACT NATIVE
-  sed -i.bak '/\/\/ MARKER_REACT_NATIVE_IOS_APP_DELEGATE_START/i\
-  - (void) receiveNotification:(NSNotification *) notification\
-    {\
-      if ([[notification name] isEqualToString:@"APIKeyNotification"]) {\
-        NSString *apiKey = notification.object;\
-        NSLog(@"Here is Google map API Key - %@", apiKey);\
-        [GMSServices provideAPIKey:apiKey];\
-      }\
-    }\
-  ' ./${name}/AppDelegate.mm
-}
-
-{
-  # OLD REACT NATIVE
-  sed -i.bak '/initWithDelegate/i\
-    [[NSNotificationCenter defaultCenter] addObserver:self\
-                                            selector:@selector(receiveNotification:)\
-                                                name:@"APIKeyNotification"\
-                                              object:nil];\
-  ' ./${name}/AppDelegate.m
-
-} || {
-  # NEW REACT NATIVE  
-  sed -i.bak '/\/\/ MARKER_REACT_NATIVE_IOS_APP_DELEGATE_DID_FINISH_LAUNCHING_WITH_OPTIONS/i\
-    [[NSNotificationCenter defaultCenter] addObserver:self\
-                                            selector:@selector(receiveNotification:)\
-                                                name:@"APIKeyNotification"\
-                                              object:nil];\
-  ' ./${name}/AppDelegate.mm
-
-}
-
-sed -i.bak '/@end/a\
-\
-#import <React/RCTBridgeModule.h>\
-\
-@interface KeyModule : NSObject <RCTBridgeModule>\
-@end\
-' ./${name}/AppDelegate.h
-
-cd ..
+# Replace `GEO_API_KEY` with the value of `key`
+sed -i.bak "s/GEO_API_KEY/${key}/g" ./${name}/AppDelegate.mm
 
 echo "react-native-maps configuration completed for iOS."
