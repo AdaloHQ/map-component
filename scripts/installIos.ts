@@ -17,7 +17,7 @@ let podfileContent = await Deno.readTextFile(podfilePath)
 podfileContent = insertLineAfterString(
   podfileContent,
   'config = use_native_modules!',
-  `  rn_maps_path = '"'"'../node_modules/react-native-maps'"'"'`,
+  `rn_maps_path = '../node_modules/react-native-maps'`,
   { insertBefore: true }
 )
 
@@ -25,7 +25,7 @@ podfileContent = insertLineAfterString(
 podfileContent = insertLineAfterString(
   podfileContent,
   'config = use_native_modules!',
-  `pod '"'"'react-native-google-maps'"'"', :path => rn_maps_path`,
+  `pod 'react-native-google-maps', :path => rn_maps_path`,
   { insertBefore: true }
 )
 
@@ -52,8 +52,7 @@ appDelegateContent = insertLineAfterString(
 appDelegateContent = insertLineAfterString(
   appDelegateContent,
   'initialProps = @{}',
-  `[GMSServices provideAPIKey:@"GEO_API_KEY"];`,
-  { insertBefore: true }
+  `  [GMSServices provideAPIKey:@"GEO_API_KEY"];`
 )
 
 // Replace `GEO_API_KEY` with the value of `key`
