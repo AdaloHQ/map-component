@@ -31,8 +31,11 @@ export const insertLineAfterString = (
 export const getMapsApiKey = async (projectPath: string) => {
   try {
     const protonBundlePath = join(projectPath, 'proton-bundle.json')
-    const protonBundleText = await Deno.readTextFile(protonBundlePath)
-    const protonBundle = JSON.parse(protonBundleText)
+
+    const { default: protonBundle } = await import(protonBundlePath, {
+      with: { type: 'json' },
+    })
+
     const apiKey =
       protonBundle.libraryGlobals['@protonapp/map-component']['Map']['apiKey']
 
