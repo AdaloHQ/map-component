@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "axios": "^0.19.1",
-    "google-maps-react-markers": "^2.0.10",
+    "google-maps-react-markers": "2.0.10",
     "react-native-maps": "1.10.3"
   }
 }
