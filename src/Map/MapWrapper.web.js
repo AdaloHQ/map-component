@@ -1,5 +1,6 @@
-import GoogleMapReact from 'google-map-react'
+import { useMemo } from 'react'
 import { View, Image, StyleSheet } from 'react-native'
+import GoogleMapReact from 'google-maps-react-markers'
 import { markerWidth, markerHeight, defaultZoom } from './config'
 
 const additionalStyles = StyleSheet.create({
@@ -17,12 +18,32 @@ const MapWrapper = ({
   filteredMarkers = [],
   viewCenter,
 }) => {
+  const markers = useMemo(() => {
+    if (!filteredMarkers) {
+      return []
+    }
+
+    return filteredMarkers.map(marker => (
+      <View lat={marker.lat} lng={marker.lng} onClick={marker.onPress} key={marker.key}>
+        <Image
+          resizeMode="contain"
+          source={marker.image}
+          style={[styles.markerImage, additionalStyles.markerImage]}
+        />
+      </View>
+    ))
+  }, [filteredMarkers])
+
   return (
     <GoogleMapReact
-      bootstrapURLKeys={{ key: apiKey }}
+      apiKey={apiKey}
       defaultCenter={viewCenter}
       defaultZoom={defaultZoom}
-      options={options}
+      options={{
+        ...options,
+        mapTypeControl: false,
+        streetViewControl: false,
+      }}
       onGoogleApiLoaded={({ map }) => {
         if (filteredMarkers.length > 1) {
           const bounds = new google.maps.LatLngBounds()
@@ -37,16 +58,7 @@ const MapWrapper = ({
         }
       }}
     >
-      {filteredMarkers &&
-        filteredMarkers.map(marker => (
-          <View lat={marker.lat} lng={marker.lng} onClick={marker.onPress} key={marker.key}>
-            <Image
-              resizeMode="contain"
-              source={marker.image}
-              style={[styles.markerImage, additionalStyles.markerImage]}
-            />
-          </View>
-        ))}
+      {markers}
     </GoogleMapReact>
   )
 }
