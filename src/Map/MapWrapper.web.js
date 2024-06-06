@@ -34,16 +34,20 @@ const MapWrapper = ({
     ))
   }, [filteredMarkers])
 
+  const mapOptions = useMemo(() => {
+    return {
+      ...options,
+      mapTypeControl: false,
+      streetViewControl: false,
+    }
+  }, [options])
+
   return (
     <GoogleMapReact
       apiKey={apiKey}
       defaultCenter={viewCenter}
       defaultZoom={defaultZoom}
-      options={{
-        ...options,
-        mapTypeControl: false,
-        streetViewControl: false,
-      }}
+      options={mapOptions}
       onGoogleApiLoaded={({ map }) => {
         if (filteredMarkers.length > 1) {
           const bounds = new google.maps.LatLngBounds()
