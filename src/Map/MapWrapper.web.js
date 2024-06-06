@@ -37,8 +37,12 @@ const MapWrapper = ({
   const mapOptions = useMemo(() => {
     return {
       ...options,
+      // disable the ability to switch map type (e.g. map, satellite, hybrid etc.)
       mapTypeControl: false,
+      // disable the ability to switch into Street View
       streetViewControl: false,
+      // disables the ability to click on various landmarks, shops etc. that Google Maps shows
+      clickableIcons: false,
     }
   }, [options])
 
