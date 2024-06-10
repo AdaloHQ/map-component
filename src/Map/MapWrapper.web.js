@@ -1,5 +1,6 @@
-import GoogleMapReact from 'google-map-react'
+import { useMemo } from 'react'
 import { View, Image, StyleSheet } from 'react-native'
+import GoogleMapReact from 'google-maps-react-markers'
 import { markerWidth, markerHeight, defaultZoom } from './config'
 
 const additionalStyles = StyleSheet.create({
@@ -17,12 +18,40 @@ const MapWrapper = ({
   filteredMarkers = [],
   viewCenter,
 }) => {
+  const markers = useMemo(() => {
+    if (!filteredMarkers) {
+      return []
+    }
+
+    return filteredMarkers.map(marker => (
+      <View lat={marker.lat} lng={marker.lng} onClick={marker.onPress} key={marker.key}>
+        <Image
+          resizeMode="contain"
+          source={marker.image}
+          style={[styles.markerImage, additionalStyles.markerImage]}
+        />
+      </View>
+    ))
+  }, [filteredMarkers])
+
+  const mapOptions = useMemo(() => {
+    return {
+      ...options,
+      // disable the ability to switch map type (e.g. map, satellite, hybrid etc.)
+      mapTypeControl: false,
+      // disable the ability to switch into Street View
+      streetViewControl: false,
+      // disables the ability to click on various landmarks, shops etc. that Google Maps shows
+      clickableIcons: false,
+    }
+  }, [options])
+
   return (
     <GoogleMapReact
-      bootstrapURLKeys={{ key: apiKey }}
+      apiKey={apiKey}
       defaultCenter={viewCenter}
       defaultZoom={defaultZoom}
-      options={options}
+      options={mapOptions}
       onGoogleApiLoaded={({ map }) => {
         if (filteredMarkers.length > 1) {
           const bounds = new google.maps.LatLngBounds()
@@ -37,16 +66,7 @@ const MapWrapper = ({
         }
       }}
     >
-      {filteredMarkers &&
-        filteredMarkers.map(marker => (
-          <View lat={marker.lat} lng={marker.lng} onClick={marker.onPress} key={marker.key}>
-            <Image
-              resizeMode="contain"
-              source={marker.image}
-              style={[styles.markerImage, additionalStyles.markerImage]}
-            />
-          </View>
-        ))}
+      {markers}
     </GoogleMapReact>
   )
 }
