@@ -15,16 +15,22 @@ await backupFile(manifestFilePath)
 const metaTag = `    <meta-data android:name="com.google.android.geo.API_KEY" android:value="GEO_API_KEY" />`
 let manifestContent = await Deno.readTextFile(manifestFilePath)
 
-// insert meta-data tag before the closing </application> tag
-manifestContent = insertLineAfterString(
-  manifestContent,
-  '</application',
-  metaTag,
-  { insertBefore: true }
-)
+// check if there's already a meta-data tag with the API key
+if (manifestContent.includes('com.google.android.geo.API_KEY')) {
+  console.log(`AndroidManifest.xml already contains a meta-data tag with the API key`)
+} else {
+  // insert meta-data tag before the closing </application> tag
+  manifestContent = insertLineAfterString(
+    manifestContent,
+    '</application',
+    metaTag,
+    { insertBefore: true }
+  )
 
-// replace KEY with the actual key
-manifestContent = manifestContent.replaceAll('GEO_API_KEY', apiKey)
+  // replace KEY with the actual key
+  manifestContent = manifestContent.replaceAll('GEO_API_KEY', apiKey)
 
-await Deno.writeTextFile(manifestFilePath, manifestContent)
-console.log(`Finished updating AndroidManifest.xml`)
+  await Deno.writeTextFile(manifestFilePath, manifestContent)
+  console.log(`Finished updating AndroidManifest.xml`)
+}
+
