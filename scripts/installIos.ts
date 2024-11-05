@@ -29,6 +29,28 @@ podfileContent = insertLineAfterString(
   { insertBefore: true }
 )
 
+// Add these additional pod configurations after the existing maps configuration
+podfileContent = insertLineAfterString(
+  podfileContent,
+  "pod 'react-native-google-maps', :path => rn_maps_path",
+  `
+  pod 'Google-Maps-iOS-Utils'
+  pod 'GoogleMaps'`
+)
+
+// Ensure subspecs are added
+podfileContent = insertLineAfterString(
+  podfileContent,
+  "target '${projectName}' do",
+  `
+  # React Native Maps dependencies
+  rn_maps_path = '../node_modules/react-native-maps'
+  pod 'react-native-google-maps', :path => rn_maps_path
+  pod 'GoogleMaps'
+  pod 'Google-Maps-iOS-Utils'`,
+  { insertBefore: false }
+)
+
 await Deno.writeTextFile(podfilePath, podfileContent)
 console.log(`Updated Podfile with react-native-google-maps and rn_maps_path`)
 
