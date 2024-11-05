@@ -10,5 +10,6 @@
     }
   ],
   "iosInstallScript": "scripts/installIos.ts",
-  "androidInstallScript": "scripts/installAndroid.ts"
+  "androidInstallScript": "scripts/installAndroid.ts",
+  "webpackConfig": "./webpack.config.js"
 }
