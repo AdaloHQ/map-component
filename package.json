@@ -15,7 +15,7 @@
     "react-dom": ">=16"
   },
   "devDependencies": {
-    "@adalo/cli": "^0.0.57",
+    "@adalo/cli": "^1.0.0",
     "react": "^16.13.1",
     "react-art": "^16.13.1",
     "react-dom": "^16.13.1",
