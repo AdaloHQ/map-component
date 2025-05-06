@@ -1,6 +1,6 @@
 {
   "name": "@protonapp/map-component",
-  "version": "0.5.55",
+  "version": "0.5.56",
   "description": "Map Component for Adalo",
   "main": "index.js",
   "author": "Adalo",
@@ -24,6 +24,6 @@
   "dependencies": {
     "axios": "1.6.7",
     "google-maps-react-markers": "^2.0.15",
-    "react-native-maps": "^1.23.7"
+    "react-native-maps": "1.20.1"
   }
 }
