@@ -12,26 +12,6 @@ await backupFile(podfilePath)
 
 let podfileContent = await Deno.readTextFile(podfilePath)
 
-// Add `rn_maps_path = '../node_modules/react-native-maps'` above `config = use_native_modules!`
-
-podfileContent = insertLineAfterString(
-  podfileContent,
-  'config = use_native_modules!',
-  `rn_maps_path = '../node_modules/react-native-maps'`,
-  { insertBefore: true }
-)
-
-// Add `pod 'react-native-google-maps', :path => rn_maps_path` above `config = use_native_modules!`
-podfileContent = insertLineAfterString(
-  podfileContent,
-  'config = use_native_modules!',
-  `pod 'react-native-google-maps', :path => rn_maps_path`,
-  { insertBefore: true }
-)
-
-await Deno.writeTextFile(podfilePath, podfileContent)
-console.log(`Updated Podfile with react-native-google-maps and rn_maps_path`)
-
 const appDelegatePath = join(projectPath, `ios/${projectName}/AppDelegate.mm`)
 
 await backupFile(appDelegatePath)
