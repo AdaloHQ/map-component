@@ -3,13 +3,13 @@
   "version": "0.5.51",
   "description": "Map Component for Adalo",
   "main": "index.js",
+  "author": "Adalo",
+  "license": "ISC",
   "scripts": {
     "start": "adalo dev",
     "login": "adalo login",
     "publish": "adalo publish"
   },
-  "author": "Adalo",
-  "license": "ISC",
   "peerDependencies": {
     "react": ">=18",
     "react-dom": ">=18"
@@ -24,6 +24,6 @@
   "dependencies": {
     "axios": "1.6.7",
     "google-maps-react-markers": "^2.0.15",
-    "react-native-maps": "^1.20.1"
+    "react-native-maps": "^1.23.7"
   }
 }
