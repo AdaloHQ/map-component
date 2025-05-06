@@ -12,31 +12,53 @@ await backupFile(podfilePath)
 
 let podfileContent = await Deno.readTextFile(podfilePath)
 
-const appDelegatePath = join(projectPath, `ios/${projectName}/AppDelegate.mm`)
+// Add Google Maps pods at the target level
+if (!podfileContent.includes('react-native-google-maps')) {
+  const targetBlockStart = podfileContent.indexOf("target 'AdaloApp' do")
+  if (targetBlockStart !== -1) {
+    const insertionPoint = podfileContent.indexOf('use_react_native!', targetBlockStart)
+    if (insertionPoint !== -1) {
+      const newContent = [
+        podfileContent.slice(0, insertionPoint),
+        "  # react-native-maps dependencies",
+        "  pod 'GoogleMaps'",
+        "  pod 'Google-Maps-iOS-Utils'",
+        "  pod 'react-native-google-maps', :path => '../node_modules/react-native-maps'",
+        "  ",
+        podfileContent.slice(insertionPoint)
+      ].join('\n')
 
+      await Deno.writeTextFile(podfilePath, newContent)
+      console.log('Successfully updated Podfile with Google Maps dependencies')
+    }
+  }
+}
+
+// 2. Handle AppDelegate modifications
+const appDelegatePath = join(projectPath, `ios/${projectName}/AppDelegate.mm`)
 await backupFile(appDelegatePath)
 
 let appDelegateContent = await Deno.readTextFile(appDelegatePath)
 
-// Add `#import <GoogleMaps/GoogleMaps.h>` BEFORE `// MARKER_REACT_NATIVE_IOS_APP_DELEGATE_IMPORTS`
+// Add GoogleMaps import
+if (!appDelegateContent.includes('<GoogleMaps/GoogleMaps.h>')) {
+  appDelegateContent = insertLineAfterString(
+    appDelegateContent,
+    '#import <React/RCTBridgeDelegate.h>',
+    '#import <GoogleMaps/GoogleMaps.h>',
+    { insertAfter: true }
+  )
+}
 
-appDelegateContent = insertLineAfterString(
-  appDelegateContent,
-  'MARKER_REACT_NATIVE_IOS_APP_DELEGATE_IMPORTS',
-  `#import <GoogleMaps/GoogleMaps.h>`,
-  { insertBefore: true }
-)
-
-// Add `[GMSServices provideAPIKey:@"GEO_API_KEY"];` AFTER `self.initialProps = @{};`
-
-appDelegateContent = insertLineAfterString(
-  appDelegateContent,
-  'initialProps = @{}',
-  `  [GMSServices provideAPIKey:@"GEO_API_KEY"];`
-)
-
-// Replace `GEO_API_KEY` with the value of `key`
-appDelegateContent = appDelegateContent.replaceAll('GEO_API_KEY', apiKey)
+// Add API key initialization
+if (!appDelegateContent.includes('GMSServices provideAPIKey')) {
+  appDelegateContent = insertLineAfterString(
+    appDelegateContent,
+    'RCTAppSetupPrepareApp(application)',
+    `  [GMSServices provideAPIKey:@"${apiKey}"];`,
+    { insertAfter: true }
+  )
+}
 
 await Deno.writeTextFile(appDelegatePath, appDelegateContent)
-console.log(`Updated AppDelegate.mm with GoogleMaps import and API key`)
+console.log('Successfully updated AppDelegate.mm with Google Maps configuration')
