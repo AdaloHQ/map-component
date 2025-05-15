@@ -25,7 +25,7 @@ podfileContent = insertLineAfterString(
 podfileContent = insertLineAfterString(
   podfileContent,
   'config = use_native_modules!',
-  `pod 'react-native-google-maps', :path => rn_maps_path`,
+  `pod 'react-native-maps/Google', :path => rn_maps_path`,
   { insertBefore: true }
 )
 

@@ -24,6 +24,6 @@
   "dependencies": {
     "axios": "1.6.7",
     "google-maps-react-markers": "2.0.10",
-    "react-native-maps": "1.21.0"
+    "react-native-maps": "1.23.8"
   }
 }
