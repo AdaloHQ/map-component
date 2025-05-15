@@ -21,70 +21,59 @@ const MapWrapper = ({
   const mapRef = useRef(null)
 
   return (
-    <>
-      <div>
-        Here map - start
-      </div>
+    <MapView
+      style={styles.container}
+      provider={PROVIDER_GOOGLE}
+      initialRegion={{
+        latitude: viewCenter.lat,
+        longitude: viewCenter.lng,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA,
+      }}
+      showsUserLocation={currentLocation}
+      mapType={mapType}
+      customMapStyle={options.styles || []}
+      ref={mapRef}
+      onMapReady={() => {
+        if (!mapRef.current) {
+          return
+        }
 
+        if (filteredMarkers.length > 1) {
+          if (Platform.OS === 'android') {
+            // This is a hack inspired by this issue:
+            // https://github.com/react-native-maps/react-native-maps/issues/4531
+            // It may be that future versions of react-native-maps will fix this issue
+            setTimeout(() => {
+              mapRef.current.fitToElements(true)
+            }, 50)
 
-      <MapView
-        style={styles.container}
-        provider={PROVIDER_GOOGLE}
-        initialRegion={{
-          latitude: viewCenter.lat,
-          longitude: viewCenter.lng,
-          latitudeDelta: LATITUDE_DELTA,
-          longitudeDelta: LONGITUDE_DELTA,
-        }}
-        showsUserLocation={currentLocation}
-        mapType={mapType}
-        customMapStyle={options.styles || []}
-        ref={mapRef}
-        onMapReady={() => {
-          if (!mapRef.current) {
             return
           }
 
-          if (filteredMarkers.length > 1) {
-            if (Platform.OS === 'android') {
-              // This is a hack inspired by this issue:
-              // https://github.com/react-native-maps/react-native-maps/issues/4531
-              // It may be that future versions of react-native-maps will fix this issue
-              setTimeout(() => {
-                mapRef.current.fitToElements(true)
-              }, 50)
-
-              return
-            }
-
-            mapRef.current.fitToElements(true)
-          }
-        }}
-      >
-        {filteredMarkers &&
-          filteredMarkers.map(marker => (
-            <Marker
-              coordinate={{
-                latitude: marker && marker.lat,
-                longitude: marker && marker.lng,
-              }}
-              style={{ alignItems: 'center', justifyContent: 'center' }}
-              key={marker.key}
-              onPress={marker.onPress}
-            >
-              <Image
-                resizeMode="contain"
-                source={marker && marker.image}
-                style={styles.markerImage}
-              />
-            </Marker>
-          ))}
-      </MapView>
-
-      <div>
-        Here map - end
-      </div>
-    </>
+          mapRef.current.fitToElements(true)
+        }
+      }}
+    >
+      {filteredMarkers &&
+        filteredMarkers.map(marker => (
+          <Marker
+            coordinate={{
+              latitude: marker && marker.lat,
+              longitude: marker && marker.lng,
+            }}
+            style={{ alignItems: 'center', justifyContent: 'center' }}
+            key={marker.key}
+            onPress={marker.onPress}
+          >
+            <Image
+              resizeMode="contain"
+              source={marker && marker.image}
+              style={styles.markerImage}
+            />
+          </Marker>
+        ))}
+    </MapView>
   )
 }
 
