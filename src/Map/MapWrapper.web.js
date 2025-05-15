@@ -12,12 +12,12 @@ const additionalStyles = StyleSheet.create({
 })
 
 const MapWrapper = ({
-  apiKey,
-  options,
-  styles,
-  filteredMarkers = [],
-  viewCenter,
-}) => {
+                      apiKey,
+                      options,
+                      styles,
+                      filteredMarkers = [],
+                      viewCenter,
+                    }) => {
   const markers = useMemo(() => {
     if (!filteredMarkers) {
       return []
@@ -47,27 +47,36 @@ const MapWrapper = ({
   }, [options])
 
   return (
-    <GoogleMapReact
-      apiKey={apiKey}
-      defaultCenter={viewCenter}
-      defaultZoom={defaultZoom}
-      options={mapOptions}
-      onGoogleApiLoaded={({ map }) => {
-        if (filteredMarkers.length > 1) {
-          const bounds = new google.maps.LatLngBounds()
+    <>
+      <div>
+        Here map - start
+      </div>
+      <GoogleMapReact
+        apiKey={apiKey}
+        defaultCenter={viewCenter}
+        defaultZoom={defaultZoom}
+        options={mapOptions}
+        onGoogleApiLoaded={({ map }) => {
+          if (filteredMarkers.length > 1) {
+            const bounds = new google.maps.LatLngBounds()
 
-          for (const marker of filteredMarkers) {
-            const { lat, lng } = marker
-            const newPoint = new google.maps.LatLng(lat, lng)
-            bounds.extend(newPoint)
+            for (const marker of filteredMarkers) {
+              const { lat, lng } = marker
+              const newPoint = new google.maps.LatLng(lat, lng)
+              bounds.extend(newPoint)
+            }
+
+            map.fitBounds(bounds)
           }
+        }}
+      >
+        {markers}
+      </GoogleMapReact>
+      <div>
+        Here map - end
+      </div>
+    </>
 
-          map.fitBounds(bounds)
-        }
-      }}
-    >
-      {markers}
-    </GoogleMapReact>
   )
 }
 
