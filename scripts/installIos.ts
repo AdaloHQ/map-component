@@ -58,5 +58,7 @@ appDelegateContent = insertLineAfterString(
 // Replace `GEO_API_KEY` with the value of `key`
 appDelegateContent = appDelegateContent.replaceAll('GEO_API_KEY', apiKey)
 
+console.log("temp: appDelegateContent: ", appDelegateContent)
+
 await Deno.writeTextFile(appDelegatePath, appDelegateContent)
 console.log(`Updated AppDelegate.mm with GoogleMaps import and API key`)
