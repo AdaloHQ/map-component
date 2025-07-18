@@ -21,9 +21,7 @@ if (!podfileContent.includes('react-native-google-maps')) {
       const newContent = [
         podfileContent.slice(0, insertionPoint),
         "  # react-native-maps dependencies",
-        "  pod 'GoogleMaps'",
-        "  pod 'Google-Maps-iOS-Utils'",
-        "  pod 'react-native-google-maps', :path => '../node_modules/react-native-maps'",
+        "  pod 'react-native-maps/Google', :path => '../node_modules/react-native-maps'",
         "  ",
         podfileContent.slice(insertionPoint)
       ].join('\n')
@@ -44,7 +42,7 @@ let appDelegateContent = await Deno.readTextFile(appDelegatePath)
 if (!appDelegateContent.includes('<GoogleMaps/GoogleMaps.h>')) {
   appDelegateContent = insertLineAfterString(
     appDelegateContent,
-    '#import <React/RCTBridgeDelegate.h>',
+    '#import <React/RCTBundleURLProvider.h>',
     '#import <GoogleMaps/GoogleMaps.h>',
     { insertAfter: true }
   )
