@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@adalo/cli@^1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@adalo/cli/-/cli-1.0.4.tgz#76bfe5c7dc8b699a7960a32af203a1801f40807c"
-  integrity sha512-+Dg7YaHbuucq9WYWekYBHreZs4GZsKlTqjhqt6Q90yjKHJavLLflmFy7Fw2jXcn6boPKQXFCIxluS4GA0DGmlA==
+"@adalo/cli@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@adalo/cli/-/cli-1.0.6.tgz#f9c8e5ecc58a328a8c2e9748f94d27bf7bd6aee1"
+  integrity sha512-pQc516BwzbHOdeO23OVBP3wJjPtpzJ5Ggqna8gp3MSnMWneLGMzjzFlnHxIEAsjQsYF1MSvqH3pW2CG4XICovw==
   dependencies:
     "@babel/core" "^7.24.7"
     "@babel/plugin-proposal-class-properties" "^7.18.6"
@@ -3687,10 +3687,10 @@ react-dom@^18.2.0:
     loose-envify "^1.1.0"
     scheduler "^0.23.2"
 
-react-native-maps@1.23.8:
-  version "1.23.8"
-  resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-1.23.8.tgz#c03714c8561005fa46a230ab4e4430b777ddf1a4"
-  integrity sha512-oYuJFZ/MV5URkJRloDlZM3+tb4PkT93Qg19b9c03txCPUpUj70HKXjDTrr7RTRGY1Nu66NTlLoKeV635WI8wQQ==
+react-native-maps@^1.25.0:
+  version "1.25.0"
+  resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-1.25.0.tgz#21be7312f6f17e8d1f5105ad90c87c1e46eb7234"
+  integrity sha512-VIOc2gAbRcr+ZArAX7mnY6TF1ouGMSDTDHF85Ibs8nf0BYoOfnwM6lTqNxmPHLRv4gDFTkJ4lUENp/A6iMHc0g==
   dependencies:
     "@types/geojson" "^7946.0.13"
 
@@ -4264,8 +4264,7 @@ string_decoder@~1.1.1:
   dependencies:
     safe-buffer "~5.1.0"
 
-"strip-ansi-cjs@npm:strip-ansi@^6.0.1", strip-ansi@^6.0.1:
-  name strip-ansi-cjs
+"strip-ansi-cjs@npm:strip-ansi@^6.0.1":
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
   integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
@@ -4278,6 +4277,13 @@ strip-ansi@6.0.0, strip-ansi@^6.0.0:
   integrity sha512-AuvKTrTfQNYNIctbR1K/YGTR1756GycPsg7b9bdV9Duqur4gv6aKqHXah67Z8ImS7WEz5QVcOtlfW2rZEugt6w==
   dependencies:
     ansi-regex "^5.0.0"
+
+strip-ansi@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
+  integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
+  dependencies:
+    ansi-regex "^5.0.1"
 
 strip-ansi@^7.0.1:
   version "7.1.0"
