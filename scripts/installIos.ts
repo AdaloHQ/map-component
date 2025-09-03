@@ -16,12 +16,13 @@ let podfileContent = await Deno.readTextFile(podfilePath)
 if (!podfileContent.includes('react-native-google-maps')) {
   const targetBlockStart = podfileContent.indexOf("target 'AdaloApp' do")
   if (targetBlockStart !== -1) {
-    const insertionPoint = podfileContent.indexOf('use_react_native!', targetBlockStart)
+    const insertionPoint = podfileContent.indexOf('  config = use_native_modules!', targetBlockStart)
     if (insertionPoint !== -1) {
       const newContent = [
         podfileContent.slice(0, insertionPoint),
         "  # react-native-maps dependencies",
-        "  pod 'react-native-maps/Google', :path => '../node_modules/react-native-maps'",
+        "  rn_maps_path = '../node_modules/react-native-maps'",
+        "  pod 'react-native-maps/Google', :path => rn_maps_path",
         "  ",
         podfileContent.slice(insertionPoint)
       ].join('\n')
@@ -52,7 +53,7 @@ if (!appDelegateContent.includes('<GoogleMaps/GoogleMaps.h>')) {
 if (!appDelegateContent.includes('GMSServices provideAPIKey')) {
   appDelegateContent = insertLineAfterString(
     appDelegateContent,
-    'RCTAppSetupPrepareApp(application)',
+    'self.initialProps = @{};',
     `  [GMSServices provideAPIKey:@"${apiKey}"];`,
     { insertAfter: true }
   )

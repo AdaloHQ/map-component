@@ -3681,10 +3681,10 @@ react-dom@^18.2.0:
     loose-envify "^1.1.0"
     scheduler "^0.23.2"
 
-react-native-maps@1.24.5:
-  version "1.24.5"
-  resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-1.24.5.tgz#0a131204ef95b913b63df9018339c4ba08a62b22"
-  integrity sha512-5nruAxFwFb9bF6KF5M+rv5nP465p+RQcrGQinBn2NhXnrdKFIea+i5dTt6r4nVFGoYQakAidL9uOaDRaZBgBOg==
+react-native-maps@1.26.0:
+  version "1.26.0"
+  resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-1.26.0.tgz#34622df208ca9be63d81d448da68752d3467e89f"
+  integrity sha512-TmQbkJeh52INqY0oCwl4o1O9qerc4YdyPfTCcnn41aFAs28ZYjG4QAXcVDALXclRFz6eqog3+zgeU7eJ2YVJ+Q==
   dependencies:
     "@types/geojson" "^7946.0.13"
 
