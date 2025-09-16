@@ -13,7 +13,7 @@ await backupFile(podfilePath)
 let podfileContent = await Deno.readTextFile(podfilePath)
 
 // Add Google Maps pods at the target level
-if (!podfileContent.includes('react-native-google-maps')) {
+if (!podfileContent.includes('react-native-maps/Google')) {
   const targetBlockStart = podfileContent.indexOf("target 'AdaloApp' do")
   if (targetBlockStart !== -1) {
     const insertionPoint = podfileContent.indexOf('  config = use_native_modules!', targetBlockStart)
