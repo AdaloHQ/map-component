@@ -43,7 +43,7 @@ let appDelegateContent = await Deno.readTextFile(appDelegatePath)
 if (!appDelegateContent.includes('<GoogleMaps/GoogleMaps.h>')) {
   appDelegateContent = insertLineAfterString(
     appDelegateContent,
-    '#import <React/RCTBundleURLProvider.h>',
+    'MARKER_REACT_NATIVE_IOS_APP_DELEGATE_IMPORTS',
     '#import <GoogleMaps/GoogleMaps.h>',
     { insertAfter: true }
   )
