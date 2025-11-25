@@ -1,7 +1,8 @@
 import { useRef } from 'react'
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
-import { Image, Dimensions, Platform } from 'react-native'
+import { Dimensions, Platform, View } from 'react-native'
 import { defaultZoom } from './config'
+import { Image as SvgImage, Svg } from 'react-native-svg'
 
 const { height, width } = Dimensions.get('window')
 
@@ -47,10 +48,10 @@ const MapWrapper = ({
             setTimeout(() => {
               mapRef.current.fitToElements(true)
             }, 50)
-            
+
             return
           }
-          
+
           mapRef.current.fitToElements(true)
         }
       }}
@@ -66,11 +67,17 @@ const MapWrapper = ({
             key={marker.key}
             onPress={marker.onPress}
           >
-            <Image
-              resizeMode="contain"
-              source={marker && marker.image}
-              style={styles.markerImage}
-            />
+            <View style={styles.markerImage}>
+              <Svg width="100%" height="100%" viewBox="0 0 24 24">
+                <SvgImage
+                  x={0}
+                  y={0}
+                  width="100%"
+                  height="100%"
+                  href={marker.image}
+                />
+              </Svg>
+            </View>
           </Marker>
         ))}
     </MapView>
