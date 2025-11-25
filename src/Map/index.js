@@ -102,7 +102,7 @@ export default class Map extends Component {
       // "un-render" the map so that it can be re-rendered with new data
       this.setState({ isDataAddressesLoaded: false })
     }
-    
+
     // generate an array of geocoded addresses
     if (!isDataAddressesLoaded) {
       this.loadDataAddresses()
@@ -217,7 +217,7 @@ export default class Map extends Component {
     this.setState({
       isDataAddressesLoading: true
     })
-    
+
     const coordinates = []
     const addresses = []
 
