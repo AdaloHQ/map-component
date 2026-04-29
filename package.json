@@ -1,6 +1,6 @@
 {
   "name": "@protonapp/oleksii-map-component",
-  "version": "0.5.51-locationprecision.1",
+  "version": "0.5.70",
   "description": "Map Component for Adalo",
   "main": "index.js",
   "author": "Adalo",
