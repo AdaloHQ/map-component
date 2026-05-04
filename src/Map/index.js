@@ -68,7 +68,12 @@ export default class Map extends Component {
   }
 
   componentDidMount() {
-    const { editor, apiKey, style: { currentLocation } } = this.props
+    const {
+      editor,
+      apiKey,
+      style: { currentLocation },
+      locationPrecision = 'coarse',
+    } = this.props
 
     if (editor) {
       return
@@ -80,12 +85,48 @@ export default class Map extends Component {
       })
     }
 
-    if (Platform.OS === 'web' && currentLocation) {
+    if (!currentLocation) {
+      return
+    }
+
+    if (Platform.OS === 'web') {
       navigator.geolocation.getCurrentPosition(currentPosition => {
         this.setState({
           currentPosition
         })
       })
+      return
+    }
+
+    if (Platform.OS === 'android' && locationPrecision === 'coarse') {
+      this.fetchApproximateAndroidPosition()
+    }
+
+  }
+
+  async fetchApproximateAndroidPosition() {
+    try {
+      const { PermissionsAndroid: PA } = require('react-native')
+      const result = await PA.request(PA.PERMISSIONS.ACCESS_COARSE_LOCATION)
+      if (result !== 'granted') {
+        return
+      }
+
+      if (typeof navigator === 'undefined' || !navigator.geolocation) {
+        return
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        currentPosition => {
+          this.setState({ currentPosition })
+        },
+        () => {
+          // Position fetch failed — skip the circle silently.
+        },
+        { enableHighAccuracy: false, timeout: 30000, maximumAge: 60000 }
+      )
+    } catch (e) {
+      // Geolocation not available in this environment; skip the circle.
     }
   }
 
@@ -319,9 +360,18 @@ export default class Map extends Component {
     const {
       apiKey,
       editor,
-      style: { mapStyle, customStyle, currentLocation }
+      style: { mapStyle, customStyle, currentLocation },
+      // 'none' | 'coarse' | 'fine' — Android tier; defaults to 'coarse' (no FINE
+      // until the maker explicitly opts in via Publish Settings).
+      locationPrecision = 'coarse',
     } = this.props
-    const { errorMessage, isDataAddressesLoaded, isUserLocationLoaded, userLocation } = this.state
+    const {
+      errorMessage,
+      isDataAddressesLoaded,
+      isUserLocationLoaded,
+      userLocation,
+      currentPosition,
+    } = this.state
 
     if (editor) {
       return (
@@ -362,6 +412,15 @@ export default class Map extends Component {
         ? { lat: filteredMarkers[0].lat, lng: filteredMarkers[0].lng }
         : defaultCenter
 
+    const approximateUserPosition =
+      currentPosition && currentPosition.coords
+        ? {
+            latitude: currentPosition.coords.latitude,
+            longitude: currentPosition.coords.longitude,
+            accuracy: currentPosition.coords.accuracy,
+          }
+        : null
+
     return (
       <View style={{ width: '100%', height: '100%' }}>
         <MapWrapper
@@ -371,6 +430,8 @@ export default class Map extends Component {
           currentLocation={currentLocation}
           filteredMarkers={filteredMarkers}
           viewCenter={viewCenter}
+          locationPrecision={locationPrecision}
+          approximateUserPosition={approximateUserPosition}
         />
       </View>
     )
