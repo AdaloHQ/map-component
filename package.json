@@ -1,6 +1,6 @@
 {
   "name": "@protonapp/map-component",
-  "version": "0.5.70",
+  "version": "0.5.79",
   "description": "Map Component for Adalo",
   "main": "index.js",
   "author": "Adalo",
@@ -15,7 +15,7 @@
     "react-dom": ">=18"
   },
   "devDependencies": {
-    "@adalo/cli": "1.0.6",
+    "@adalo/cli": "^1.0.9",
     "react": "18.2.0",
     "react-art": "18.2.0",
     "react-dom": "18.2.0",
