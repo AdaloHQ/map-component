@@ -65,6 +65,7 @@ export default class Map extends Component {
     isUserLocationLoaded: false,
     errorMessage: null,
     currentPosition: null,
+    coarseAndroidPosition: null,
   }
 
   componentDidMount() {
@@ -109,24 +110,27 @@ export default class Map extends Component {
       const { PermissionsAndroid: PA } = require('react-native')
       const result = await PA.request(PA.PERMISSIONS.ACCESS_COARSE_LOCATION)
       if (result !== 'granted') {
+        console.warn('[MapComponent] coarse permission not granted:', result)
         return
       }
 
       if (typeof navigator === 'undefined' || !navigator.geolocation) {
+        console.warn('[MapComponent] navigator.geolocation not available in this environment')
         return
       }
 
       navigator.geolocation.getCurrentPosition(
-        currentPosition => {
-          this.setState({ currentPosition })
+        position => {
+          console.warn('[MapComponent] got approximate position:', position?.coords)
+          this.setState({ coarseAndroidPosition: position })
         },
-        () => {
-          // Position fetch failed — skip the circle silently.
+        err => {
+          console.warn('[MapComponent] geolocation error:', err?.code, err?.message)
         },
         { enableHighAccuracy: false, timeout: 30000, maximumAge: 60000 }
       )
     } catch (e) {
-      // Geolocation not available in this environment; skip the circle.
+      console.warn('[MapComponent] fetchApproximateAndroidPosition failed:', e?.message)
     }
   }
 
@@ -370,7 +374,7 @@ export default class Map extends Component {
       isDataAddressesLoaded,
       isUserLocationLoaded,
       userLocation,
-      currentPosition,
+      coarseAndroidPosition,
     } = this.state
 
     if (editor) {
@@ -413,11 +417,11 @@ export default class Map extends Component {
         : defaultCenter
 
     const approximateUserPosition =
-      currentPosition && currentPosition.coords
+      coarseAndroidPosition && coarseAndroidPosition.coords
         ? {
-            latitude: currentPosition.coords.latitude,
-            longitude: currentPosition.coords.longitude,
-            accuracy: currentPosition.coords.accuracy,
+            latitude: coarseAndroidPosition.coords.latitude,
+            longitude: coarseAndroidPosition.coords.longitude,
+            accuracy: coarseAndroidPosition.coords.accuracy,
           }
         : null
 
