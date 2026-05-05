@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import MapView, { Circle, Marker, PROVIDER_GOOGLE } from 'react-native-maps'
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import { Dimensions, Platform, View } from 'react-native'
 import { defaultZoom } from './config'
 import { Image as SvgImage, Svg } from 'react-native-svg'
@@ -38,8 +38,6 @@ const MapWrapper = ({
   currentLocation,
   filteredMarkers = [],
   viewCenter,
-  locationPrecision = 'coarse',
-  approximateUserPosition = null,
 }) => {
   const mapType =
     options.mapTypeId === 'roadmap' ? 'standard' : options.mapTypeId
@@ -49,21 +47,6 @@ const MapWrapper = ({
 
   const mapRef = useRef(null)
   const markerSize = getMarkerSize(styles.markerImage)
-
-  const showUserLocationDot =
-    Platform.OS === 'android'
-      ? Boolean(currentLocation) && locationPrecision === 'fine'
-      : Boolean(currentLocation)
-
-  // Android coarse tier: draw an approximate accuracy circle around the user
-  // instead of the precise blue dot. Requires only ACCESS_COARSE_LOCATION.
-  const showApproximateCircle =
-    Platform.OS === 'android' &&
-    Boolean(currentLocation) &&
-    locationPrecision === 'coarse' &&
-    approximateUserPosition &&
-    typeof approximateUserPosition.latitude === 'number' &&
-    typeof approximateUserPosition.longitude === 'number'
 
   return (
     <MapView
@@ -75,7 +58,7 @@ const MapWrapper = ({
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA,
       }}
-      showsUserLocation={showUserLocationDot}
+      showsUserLocation={currentLocation}
       mapType={mapType}
       customMapStyle={options.styles || []}
       ref={mapRef}
@@ -125,23 +108,6 @@ const MapWrapper = ({
             </View>
           </Marker>
         ))}
-      {showApproximateCircle && (
-        <Circle
-          center={{
-            latitude: approximateUserPosition.latitude,
-            longitude: approximateUserPosition.longitude,
-          }}
-          radius={
-            typeof approximateUserPosition.accuracy === 'number' &&
-            approximateUserPosition.accuracy > 0
-              ? approximateUserPosition.accuracy
-              : 500
-          }
-          fillColor="rgba(0, 122, 255, 0.15)"
-          strokeColor="rgba(0, 122, 255, 0.4)"
-          strokeWidth={1}
-        />
-      )}
     </MapView>
   )
 }
