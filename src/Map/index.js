@@ -114,12 +114,12 @@ export default class Map extends Component {
         return
       }
 
-      if (typeof navigator === 'undefined' || !navigator.geolocation) {
-        console.warn('[MapComponent] navigator.geolocation not available in this environment')
-        return
-      }
+      // react-native-geolocation-service is provided by the host APK as a peer
+      // dependency. We require it lazily here (after Platform.OS === 'android'
+      // guard in componentDidMount) so web builds never reach this code path.
+      const Geolocation = require('react-native-geolocation-service').default
 
-      navigator.geolocation.getCurrentPosition(
+      Geolocation.getCurrentPosition(
         position => {
           console.warn('[MapComponent] got approximate position:', position?.coords)
           this.setState({ coarseAndroidPosition: position })
@@ -414,7 +414,12 @@ export default class Map extends Component {
     const viewCenter =
       filteredMarkers.length
         ? { lat: filteredMarkers[0].lat, lng: filteredMarkers[0].lng }
-        : defaultCenter
+        : coarseAndroidPosition?.coords
+          ? {
+              lat: coarseAndroidPosition.coords.latitude,
+              lng: coarseAndroidPosition.coords.longitude,
+            }
+          : defaultCenter
 
     const approximateUserPosition =
       coarseAndroidPosition && coarseAndroidPosition.coords
