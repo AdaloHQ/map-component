@@ -1,6 +1,6 @@
 {
   "name": "@protonapp/map-component",
-  "version": "0.5.87",
+  "version": "0.5.88",
   "description": "Map Component for Adalo",
   "main": "index.js",
   "author": "Adalo",
@@ -12,13 +12,20 @@
   },
   "peerDependencies": {
     "react": ">=18",
-    "react-dom": ">=18"
+    "react-dom": ">=18",
+    "react-native-geolocation-service": "^5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react-native-geolocation-service": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@adalo/cli": "^1.0.9",
     "react": "18.2.0",
     "react-art": "18.2.0",
     "react-dom": "18.2.0",
+    "react-native-geolocation-service": "5.2.0",
     "react-native-web": "^0.19.10"
   },
   "dependencies": {
