@@ -65,6 +65,7 @@ export default class Map extends Component {
     isUserLocationLoaded: false,
     errorMessage: null,
     currentPosition: null,
+    coarseAndroidPosition: null,
   }
 
   componentDidMount() {
@@ -121,7 +122,7 @@ export default class Map extends Component {
       Geolocation.getCurrentPosition(
         position => {
           console.warn('[MapComponent] got approximate position:', position?.coords)
-          this.setState({ currentPosition: position })
+          this.setState({ coarseAndroidPosition: position })
         },
         err => {
           console.warn('[MapComponent] geolocation error:', err?.code, err?.message)
@@ -154,19 +155,14 @@ export default class Map extends Component {
     /**************************************************/
 
     /***** WEB ONLY - Manipulates map based on device location - WEB ONLY *****/
-    // Native (Android) sets state.currentPosition for the coarse-tier accuracy
-    // circle, but the user.png marker rendered from userLocation is meant for
-    // web only — guard explicitly so the marker doesn't leak to native.
-    if (Platform.OS === 'web') {
-      if (isUserLocationLoaded && this.shouldUpdateUserAddress()) {
-        // "un-render" the map so that it can be re-rendered with the device location
-        this.setState({ isUserLocationLoaded: false })
-      }
+    if (isUserLocationLoaded && this.shouldUpdateUserAddress()) {
+      // "un-render" the map so that it can be re-rendered with the device location
+      this.setState({ isUserLocationLoaded: false })
+    }
 
-      // generate a single-object array with the device location data
-      if (!isUserLocationLoaded) {
-        this.loadUserAddress()
-      }
+    // generate a single-object array with the device location data
+    if (!isUserLocationLoaded) {
+      this.loadUserAddress()
     }
     /**************************************************/
   }
@@ -378,7 +374,7 @@ export default class Map extends Component {
       isDataAddressesLoaded,
       isUserLocationLoaded,
       userLocation,
-      currentPosition,
+      coarseAndroidPosition,
     } = this.state
 
     if (editor) {
@@ -421,11 +417,11 @@ export default class Map extends Component {
         : defaultCenter
 
     const approximateUserPosition =
-      currentPosition && currentPosition.coords
+      coarseAndroidPosition && coarseAndroidPosition.coords
         ? {
-            latitude: currentPosition.coords.latitude,
-            longitude: currentPosition.coords.longitude,
-            accuracy: currentPosition.coords.accuracy,
+            latitude: coarseAndroidPosition.coords.latitude,
+            longitude: coarseAndroidPosition.coords.longitude,
+            accuracy: coarseAndroidPosition.coords.accuracy,
           }
         : null
 
