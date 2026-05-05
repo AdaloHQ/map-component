@@ -109,24 +109,27 @@ export default class Map extends Component {
       const { PermissionsAndroid: PA } = require('react-native')
       const result = await PA.request(PA.PERMISSIONS.ACCESS_COARSE_LOCATION)
       if (result !== 'granted') {
+        console.warn('[MapComponent] coarse permission not granted:', result)
         return
       }
 
-      if (typeof navigator === 'undefined' || !navigator.geolocation) {
-        return
-      }
+      // react-native-geolocation-service is provided by the host APK as a peer
+      // dependency. We require it lazily here (after Platform.OS === 'android'
+      // guard in componentDidMount) so web builds never reach this code path.
+      const Geolocation = require('react-native-geolocation-service').default
 
-      navigator.geolocation.getCurrentPosition(
-        currentPosition => {
-          this.setState({ currentPosition })
+      Geolocation.getCurrentPosition(
+        position => {
+          console.warn('[MapComponent] got approximate position:', position?.coords)
+          this.setState({ currentPosition: position })
         },
-        () => {
-          // Position fetch failed — skip the circle silently.
+        err => {
+          console.warn('[MapComponent] geolocation error:', err?.code, err?.message)
         },
         { enableHighAccuracy: false, timeout: 30000, maximumAge: 60000 }
       )
     } catch (e) {
-      // Geolocation not available in this environment; skip the circle.
+      console.warn('[MapComponent] fetchApproximateAndroidPosition failed:', e?.message)
     }
   }
 
@@ -151,14 +154,19 @@ export default class Map extends Component {
     /**************************************************/
 
     /***** WEB ONLY - Manipulates map based on device location - WEB ONLY *****/
-    if (isUserLocationLoaded && this.shouldUpdateUserAddress()) {
-      // "un-render" the map so that it can be re-rendered with the device location
-      this.setState({ isUserLocationLoaded: false })
-    }
+    // Native (Android) sets state.currentPosition for the coarse-tier accuracy
+    // circle, but the user.png marker rendered from userLocation is meant for
+    // web only — guard explicitly so the marker doesn't leak to native.
+    if (Platform.OS === 'web') {
+      if (isUserLocationLoaded && this.shouldUpdateUserAddress()) {
+        // "un-render" the map so that it can be re-rendered with the device location
+        this.setState({ isUserLocationLoaded: false })
+      }
 
-    // generate a single-object array with the device location data
-    if (!isUserLocationLoaded) {
-      this.loadUserAddress()
+      // generate a single-object array with the device location data
+      if (!isUserLocationLoaded) {
+        this.loadUserAddress()
+      }
     }
     /**************************************************/
   }
