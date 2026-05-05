@@ -114,12 +114,12 @@ export default class Map extends Component {
         return
       }
 
-      // react-native-geolocation-service is provided by the host APK as a peer
-      // dependency. We require it lazily here (after Platform.OS === 'android'
-      // guard in componentDidMount) so web builds never reach this code path.
-      const Geolocation = require('react-native-geolocation-service').default
+      if (typeof navigator === 'undefined' || !navigator.geolocation) {
+        console.warn('[MapComponent] navigator.geolocation not available in this environment')
+        return
+      }
 
-      Geolocation.getCurrentPosition(
+      navigator.geolocation.getCurrentPosition(
         position => {
           console.warn('[MapComponent] got approximate position:', position?.coords)
           this.setState({ coarseAndroidPosition: position })
