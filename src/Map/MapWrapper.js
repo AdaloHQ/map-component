@@ -1,9 +1,36 @@
 import { useRef } from 'react'
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
-import { Image, Dimensions, Platform } from 'react-native'
+import { Dimensions, Platform, View } from 'react-native'
 import { defaultZoom } from './config'
+import { Image as SvgImage, Svg } from 'react-native-svg'
 
 const { height, width } = Dimensions.get('window')
+
+const getMarkerSize = (style) => {
+  const originalWidth = style?.width || 40
+  const originalHeight = style?.height || 40
+
+  const size = Math.max(originalWidth, originalHeight)
+
+  return { width: size, height: size }
+}
+
+const pickNearestImageByStyles = (images, style) => {
+  if (!images) return null
+
+  if (!Array.isArray(images)) return images
+
+  const targetWidth = style.width || style.minWidth || 24
+  const targetHeight = style.height || style.minHeight || 24
+
+  const nearest = images.reduce((prev, curr) => {
+    const prevDiff = Math.abs(prev.width - targetWidth) + Math.abs(prev.height - targetHeight)
+    const currDiff = Math.abs(curr.width - targetWidth) + Math.abs(curr.height - targetHeight)
+    return currDiff < prevDiff ? curr : prev
+  })
+
+  return nearest
+}
 
 const MapWrapper = ({
   options,
@@ -19,6 +46,7 @@ const MapWrapper = ({
   const LONGITUDE_DELTA = LATITUDE_DELTA * (width / height)
 
   const mapRef = useRef(null)
+  const markerSize = getMarkerSize(styles.markerImage)
 
   return (
     <MapView
@@ -47,10 +75,10 @@ const MapWrapper = ({
             setTimeout(() => {
               mapRef.current.fitToElements(true)
             }, 50)
-            
+
             return
           }
-          
+
           mapRef.current.fitToElements(true)
         }
       }}
@@ -66,11 +94,18 @@ const MapWrapper = ({
             key={marker.key}
             onPress={marker.onPress}
           >
-            <Image
-              resizeMode="contain"
-              source={marker && marker.image}
-              style={styles.markerImage}
-            />
+            <View style={{ ...styles.markerImage, ...markerSize }}>
+              <Svg width="100%" height="100%" viewBox="0 0 24 24">
+                <SvgImage
+                  x={0}
+                  y={0}
+                  width="100%"
+                  height="100%"
+                  href={pickNearestImageByStyles(marker.image, styles.markerImage)}
+                  preserveAspectRatio="xMidYMid meet"
+                />
+              </Svg>
+            </View>
           </Marker>
         ))}
     </MapView>

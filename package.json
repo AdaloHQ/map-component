@@ -1,29 +1,30 @@
 {
   "name": "@protonapp/map-component",
-  "version": "0.5.50",
+  "version": "0.5.70",
   "description": "Map Component for Adalo",
   "main": "index.js",
+  "author": "Adalo",
+  "license": "ISC",
   "scripts": {
     "start": "adalo dev",
     "login": "adalo login",
     "publish": "adalo publish"
   },
-  "author": "Adalo",
-  "license": "ISC",
   "peerDependencies": {
     "react": ">=18",
     "react-dom": ">=18"
   },
   "devDependencies": {
-    "@adalo/cli": "1.0.2",
+    "@adalo/cli": "1.0.6",
     "react": "18.2.0",
     "react-art": "18.2.0",
     "react-dom": "18.2.0",
-    "react-native-web": "0.19.10"
+    "react-native-web": "^0.19.10"
   },
   "dependencies": {
     "axios": "1.6.7",
-    "google-maps-react-markers": "2.0.10",
-    "react-native-maps": "1.10.3"
+    "google-maps-react-markers": "^2.0.15",
+    "react-native-maps": "1.26.0",
+    "react-native-svg": "^15.15.0"
   }
 }
